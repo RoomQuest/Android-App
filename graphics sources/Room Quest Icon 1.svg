@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.64"
-     inkscape:cx="78.770745"
-     inkscape:cy="364.75557"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="608.47234"
+     inkscape:cy="306.01712"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -37,8 +37,8 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:window-width="1440"
-     inkscape:window-height="878"
-     inkscape:window-x="-8"
+     inkscape:window-height="838"
+     inkscape:window-x="1432"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:snap-global="true"
@@ -74,17 +74,6 @@
   <defs
      id="defs3220">
     <linearGradient
-       id="linearGradient6086">
-      <stop
-         id="stop6088"
-         offset="0"
-         style="stop-color:#717171;stop-opacity:1;" />
-      <stop
-         id="stop6090"
-         offset="1"
-         style="stop-color:#000000;stop-opacity:0;" />
-    </linearGradient>
-    <linearGradient
        osb:paint="gradient"
        id="linearGradient4632">
       <stop
@@ -96,17 +85,6 @@
          offset="1"
          style="stop-color:#000000;stop-opacity:0;" />
     </linearGradient>
-    <linearGradient
-       id="linearGradient4606">
-      <stop
-         id="stop4608"
-         offset="0"
-         style="stop-color:#000000;stop-opacity:1;" />
-      <stop
-         id="stop4610"
-         offset="1"
-         style="stop-color:#000000;stop-opacity:0.50196081;" />
-    </linearGradient>
   </defs>
   <metadata
      id="metadata3223">
@@ -117,6 +95,11 @@
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Michael Monaghan</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -130,7 +113,7 @@
        sodipodi:nodetypes="ccccc"
        inkscape:connector-curvature="0"
        id="rect3228-2"
-       d="m 680,852.34935 60,-639.98719 -440,-0.0128 60,639.99999 c 114.74725,-0.0305 218.74561,0 320,0 z"
+       d="m 660,852.3622 40,-599.98718 -360,-0.0128 36.56514,548.46642 z"
        style="fill:#033e61;fill-opacity:1;fill-rule:nonzero;stroke:none" />
     <path
        sodipodi:nodetypes="ccccccccc"
@@ -138,6 +121,12 @@
        id="rect3228"
        d="m 680,852.36218 60,-639.98718 -440,-0.0128 60,639.99998 20,-0.0128 -40,-599.97436 360,0 -40,599.98716 z"
        style="fill:#0576bd;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    <path
+       style="fill:#034a77;fill-opacity:1;stroke:none;display:inline"
+       d="m 700,252.37502 -40,599.98716 -5,-4.99998 40,-590 -350,0 40,590 -5,5 -40,-600 z"
+       id="path3020"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccc" />
     <path
        sodipodi:nodetypes="ccccc"
        inkscape:connector-curvature="0"
@@ -161,11 +150,24 @@
          sodipodi:nodetypes="ccccc" />
     </g>
     <path
-       style="fill:#474747;fill-opacity:1;stroke:none"
-       d="m 600,892.3622 10,-5 20,-710 -10,-5 z"
+       style="fill:#474747;fill-opacity:1;stroke:#474747;stroke-width:0.5;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 600,892.3622 10,-5 20,-710 -10,-5 -1.75019,63.00692 z"
        id="path6482"
-       inkscape:connector-curvature="0" />
-  </g>
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3807"
+       style="font-size:72px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#0576bd;fill-opacity:1;stroke:none;font-family:IMPACT;-inkscape-font-specification:IMPACT"
+       transform="translate(188.28427,172.36218)"><flowRegion
+         id="flowRegion3809"><rect
+           id="rect3811"
+           width="418.60721"
+           height="124.45082"
+           x="120.20815"
+           y="736.97058"
+           style="font-size:72px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:IMPACT;-inkscape-font-specification:IMPACT;fill:#0576bd;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara3813">Room Quest</flowPara></flowRoot>  </g>
   <g
      inkscape:label="Mountain"
      id="layer4"
