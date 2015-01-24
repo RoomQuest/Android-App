@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 /**
  * Created by Michael on 1/22/2015.
- * A Map Represents a single viewable map
+ * A Map provides directions from one node or room to another room.
  */
 public class Map {
 
-    ArrayList<Point> points = new ArrayList<Point>();
     ArrayList<Node> nodes = new ArrayList<Node>();
     ArrayList<Path> paths = new ArrayList<Path>();
     ArrayList<Room> rooms = new ArrayList<Room>();
@@ -16,8 +15,8 @@ public class Map {
     /**
      * Represents a single point on the map for Rooms, Nodes, etc.
      * The coordinate system starts at the top left at (0,0) and continues proportionally with a
-     * maximum value of (1,1) for that of a square map image. A rectangular map might have coordinates
-     * (1,0.75) at the bottom right corner.
+     * maximum value of (1,1) for that of a square map image. A rectangular map might have the
+     * coordinates (1,0.75) at the bottom right corner.
      */
     public static class Point{
         public Point(float x, float y) {
@@ -25,11 +24,13 @@ public class Map {
             this.y = y;
         }
         final float x,y;
+        //TODO Image that is referenced with this point.
     }
 
     /**
      * A Node connects paths together on the map.
      * Nodes can serve as waypoints since they contain coordinates on a map.
+     * Nodes also provide information on how to go from one path to another.
      */
     public static class Node {
         //TODO Make constructor
@@ -40,6 +41,8 @@ public class Map {
         public static class PathConnection {
             public final Path path;
             public final Side side;
+            public boolean AditionalInstructions;
+            public String Instructions;
 
             /**
              * The side the path is connected to.
@@ -54,7 +57,7 @@ public class Map {
             }
         }
         public static enum Type {
-            INTERSECTION,ELEVATOR,STAIRS
+            TEE,CROSS,ELEVATOR,STAIRS,CUSTOM_DIRECTIONS
         }
     }
 
@@ -66,9 +69,19 @@ public class Map {
         //TODO Make constructor
         long id;
         Node start,end;
+
         float length;
+        public static class RoomPosition {
+            public static enum Position {
+                RIGHT,LEFT,START,END
+            }
+        }
     }
 
+    /**
+     * A Room represents a room, yeah its that simple.
+     * It also has a point that can be highlighted on the map.
+     */
     public static class Room {
         //TODO Make constructor
         Point point;
