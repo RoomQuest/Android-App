@@ -21,7 +21,8 @@
      id="defs4">
     <linearGradient
        id="linearGradient6767"
-       osb:paint="solid">
+       osb:paint="solid"
+       gradientTransform="translate(-114.56208,865.7277)">
       <stop
          style="stop-color:#ffffff;stop-opacity:1;"
          offset="0"
@@ -29,7 +30,8 @@
     </linearGradient>
     <linearGradient
        id="linearGradient40576"
-       osb:paint="solid">
+       osb:paint="solid"
+       gradientTransform="matrix(0.79340487,0,0,1,-50.588929,288.5759)">
       <stop
          style="stop-color:#0576bd;stop-opacity:1;"
          offset="0"
@@ -59,11 +61,11 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="1"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.94236332"
-     inkscape:cx="439.15704"
-     inkscape:cy="202.10802"
+     inkscape:zoom="1.0402976"
+     inkscape:cx="484.91223"
+     inkscape:cy="291.27651"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -14992,7 +14994,7 @@
        sodipodi:cy="243.73302"
        sodipodi:rx="38.183765"
        sodipodi:ry="38.183765"
-       d="m 379.0092,243.73302 a 38.183765,38.183765 0 1 1 -76.36753,0 38.183765,38.183765 0 1 1 76.36753,0 z"
+       d="m 379.0092,243.73302 c 0,21.08831 -17.09545,38.18376 -38.18376,38.18376 -21.08831,0 -38.18377,-17.09545 -38.18377,-38.18376 0,-21.08831 17.09546,-38.18377 38.18377,-38.18377 21.08831,0 38.18376,17.09546 38.18376,38.18377 z"
        transform="translate(-106.70102,296.44057)" />
     <path
        sodipodi:type="arc"
@@ -15002,7 +15004,7 @@
        sodipodi:cy="243.73302"
        sodipodi:rx="38.183765"
        sodipodi:ry="38.183765"
-       d="m 379.0092,243.73302 a 38.183765,38.183765 0 1 1 -76.36753,0 38.183765,38.183765 0 1 1 76.36753,0 z"
+       d="m 379.0092,243.73302 c 0,21.08831 -17.09545,38.18376 -38.18376,38.18376 -21.08831,0 -38.18377,-17.09545 -38.18377,-38.18376 0,-21.08831 17.09546,-38.18377 38.18377,-38.18377 21.08831,0 38.18376,17.09546 38.18376,38.18377 z"
        transform="translate(98.958791,399.63757)" />
     <rect
        style="fill:url(#linearGradient34445);fill-opacity:0.49803922000000000;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
@@ -15023,5 +15025,33 @@
            x="289.5"
            y="344.29398"
            style="font-size:10px;fill:url(#linearGradient6767)" /></flowRegion><flowPara
-         id="flowPara6815">101</flowPara></flowRoot>  </g>
+         id="flowPara6815">101</flowPara></flowRoot>    <rect
+       style="fill:url(#linearGradient40576);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect6016"
+       width="808.46515"
+       height="127.5603"
+       x="-98.215729"
+       y="162.59816" />
+    <rect
+       style="fill:url(#linearGradient6767);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect6018"
+       width="88.541862"
+       height="16.507805"
+       x="-87.71077"
+       y="189.61093" />
+    <rect
+       style="fill:url(#linearGradient6767);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect6020"
+       width="91.543282"
+       height="16.507805"
+       x="-86.210052"
+       y="224.12724" />
+    <rect
+       style="fill:url(#linearGradient6767);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect6022"
+       width="90.042572"
+       height="12.005675"
+       x="-84.709351"
+       y="255.64215" />
+  </g>
 </svg>

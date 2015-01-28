@@ -8,9 +8,11 @@ import java.util.ArrayList;
  */
 public class Map {
 
-    ArrayList<Node> nodes = new ArrayList<Node>();
-    ArrayList<Path> paths = new ArrayList<Path>();
-    ArrayList<Room> rooms = new ArrayList<Room>();
+    // Simply the data associated with the map
+    ArrayList<Node> nodes;// = new ArrayList<Node>();
+    ArrayList<Path> paths;// = new ArrayList<Path>();
+    ArrayList<Door> doors;// = new ArrayList<Door>();
+    ArrayList<Room> rooms;// = new ArrayList<Room>();
 
     /**
      * Represents a single point on the map for Rooms, Nodes, etc.
@@ -79,6 +81,13 @@ public class Map {
     }
 
     /**
+     * A Door represents a connection between a path and a room
+     */
+    public static class Door {
+
+    }
+
+    /**
      * A Room represents a room, yeah its that simple.
      * It also has a point that can be highlighted on the map.
      */
@@ -86,6 +95,5 @@ public class Map {
         //TODO Make constructor
         Point point;
         long id;
-
     }
 }
