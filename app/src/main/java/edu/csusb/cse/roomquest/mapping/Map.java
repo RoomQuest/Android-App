@@ -8,6 +8,8 @@ import java.util.ArrayList;
  */
 public class Map {
 
+
+
     // Simply the data associated with the map
     ArrayList<Node> nodes;// = new ArrayList<Node>();
     ArrayList<Path> paths;// = new ArrayList<Path>();
