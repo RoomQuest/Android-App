@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 import android.graphics.Canvas;
 
 <<<<<<< HEAD
+=======
+>>>>>>> fec3db92a2464710c8bd1d8cc4865f9d34884fb6
 package edu.csusb.cse.roomquest;
 
 import android.content.Context;
