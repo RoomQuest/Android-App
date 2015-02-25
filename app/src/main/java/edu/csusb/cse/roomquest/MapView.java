@@ -21,8 +21,12 @@ public class MapView extends View {
 
     MapView(Context context) {
         super(context);
-        paint.setAntiAlias(true);
+        init();
+    }
 
+    private void init() {
+        paint.setAntiAlias(true);
+        paint.setColor(getContext().getResources().getColor(R.color.csusb_blue));
     }
 
     @Override
@@ -33,7 +37,7 @@ public class MapView extends View {
         canvas.drawBitmap(mapBitmap,0,0, paint);
 
         for (Room r : map.rooms) {
-            canvas.drawCircle(r.getXCoord(),r.getYCoord(),10, paint);
+            canvas.drawCircle(r.getXCoord(),r.getYCoord(),25, paint);
         }
     }
 

@@ -6,8 +6,9 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,9 +24,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash);
+
+        // Set up UI elements.
+        View splash = getLayoutInflater().inflate(R.layout.splash, (ViewGroup) this.getWindow().getDecorView(), false);
+        setContentView(splash);
         mapView = new MapView(this);
 
+        // Update and read files in the background.
         new AsyncTask<Void,Void,Void>() {
 
             @Override
@@ -62,7 +67,6 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        ;
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
         return true;
     }
