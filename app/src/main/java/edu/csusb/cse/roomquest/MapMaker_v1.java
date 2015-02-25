@@ -2,7 +2,6 @@ package edu.csusb.cse.roomquest;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,24 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MapMaker {
-    public void ParseMapFile(String file) {
-        ParseMapFile(new File(file));
-    }
-	public Map ParseMapFile(File file) {
-        // Now using file instead
-		//String mapFileToRead = "mapfiles/map.csv";
+public class MapMaker_v1 {
+	public void ParseMapFile() {
+		String mapFileToRead = "mapfiles/map.csv";
 		BufferedReader br = null;
 		String line = "";
 		String splitBy = ",";
-
-        Map map = new Map();
 		List<Room> mapList = new ArrayList<Room>();
 		
 		try {
-			br = new BufferedReader(new FileReader(file));
-
-            map.mapImageName = br.readLine();
+			br = new BufferedReader(new FileReader(mapFileToRead));
 			while((line = br.readLine()) != null) {
 				//split comma
 				String [] maps = line.split(splitBy);
@@ -45,10 +36,7 @@ public class MapMaker {
 				mapList.add(mapObject);
 			}
 			//print values stored in Map
-			//printMapList(mapList);
-
-            return map;
-
+			printMapList(mapList);
 			
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
@@ -63,10 +51,9 @@ public class MapMaker {
 				}
 			}
 		}
-
-        return map;
-    }
-/*	public void printMapList(List<Room> mapListToPrint) {
+		
+	}
+	public void printMapList(List<Room> mapListToPrint) {
 		for(int i = 0; i < mapListToPrint.size(); i++) {
 			System.out.println("Maps [ Name: " + mapListToPrint.get(i).getName()
 			+ " RoomType: " + mapListToPrint.get(i).getRoomType() + " XCoord: "
@@ -74,6 +61,6 @@ public class MapMaker {
 			+ " ]");
 		}
 	}
-*/
+
 }
 

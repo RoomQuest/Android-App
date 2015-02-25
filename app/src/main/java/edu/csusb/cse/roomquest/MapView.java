@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import android.graphics.Canvas;
-
-<<<<<<< HEAD
-=======
->>>>>>> fec3db92a2464710c8bd1d8cc4865f9d34884fb6
 package edu.csusb.cse.roomquest;
 
 import android.content.Context;
@@ -16,7 +10,7 @@ import android.view.View;
  */
 public class MapView extends View {
 
-    Rect frame = null;
+    Map map = null;
 
     MapView(Context context) {
         super(context);
@@ -24,5 +18,11 @@ public class MapView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        //canvas.drawBitmap();
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+        invalidate();
     }
 }
