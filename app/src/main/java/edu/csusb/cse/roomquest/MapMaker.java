@@ -3,19 +3,27 @@ package edu.csusb.cse.roomquest;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MapMaker {
     public void ParseMapFile(String file) {
-        ParseMapFile(new File(file));
+        try {
+            ParseMapFile(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
-	public Map ParseMapFile(File file) {
-        // Now using file instead
+	public Map ParseMapFile(InputStream input) {
+        // Now using InputStream instead.
+        // InputStreams can be files and web addresses.
 		//String mapFileToRead = "mapfiles/map.csv";
 		BufferedReader br = null;
 		String line = "";
@@ -25,7 +33,7 @@ public class MapMaker {
 		List<Room> mapList = new ArrayList<Room>();
 		
 		try {
-			br = new BufferedReader(new FileReader(file));
+			br = new BufferedReader(new InputStreamReader(input));
 
             map.mapImageName = br.readLine();
 			while((line = br.readLine()) != null) {
@@ -44,17 +52,16 @@ public class MapMaker {
 				//add mapObject to the list
 				mapList.add(mapObject);
 			}
+            // No need to print anymore
 			//print values stored in Map
 			//printMapList(mapList);
 
+            map.rooms = (Room[]) mapList.toArray();
             return map;
 
-			
-		}catch(FileNotFoundException e) {
+		}catch(Exception e) {
 			e.printStackTrace();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}finally {
+        }finally {
 			if(br != null) {
 				try {
 					br.close();
@@ -63,9 +70,9 @@ public class MapMaker {
 				}
 			}
 		}
-
         return map;
     }
+    // Don't need anymore
 /*	public void printMapList(List<Room> mapListToPrint) {
 		for(int i = 0; i < mapListToPrint.size(); i++) {
 			System.out.println("Maps [ Name: " + mapListToPrint.get(i).getName()
