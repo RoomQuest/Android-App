@@ -18,6 +18,7 @@ public class MapView extends View {
     Bitmap mapBitmap = null;
 
     Paint paint = new Paint();
+    Bitmap toilet = null;
 
     MapView(Context context) {
         super(context);
@@ -27,6 +28,9 @@ public class MapView extends View {
     private void init() {
         paint.setAntiAlias(true);
         paint.setColor(getContext().getResources().getColor(R.color.csusb_blue));
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.outHeight = 48;
+        o.outWidth = 48;
     }
 
     @Override

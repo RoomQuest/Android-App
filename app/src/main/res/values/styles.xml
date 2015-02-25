@@ -6,7 +6,7 @@
         <style name="AppTheme"
             parent="@style/Theme.AppCompat">
             <item name="android:actionBarStyle">@style/CSUSB_ActionBar</item>
-
+            <item name="android:windowBackground">@android:color/black</item>
             <!-- Support library compatibility -->
             <item name="actionBarStyle">@style/CSUSB_ActionBar</item>
         </style>
