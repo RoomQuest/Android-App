@@ -19,7 +19,6 @@ public class MainActivity extends ActionBarActivity {
     Map map = null;
     MapView mapView;
     private SearchView searchView = null;
-    private FileInputStream fileInputStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +26,17 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.splash);
         mapView = new MapView(this);
 
-        File mapFile = new File(Environment.getExternalStorageDirectory() + "/RoomQuest/map.rqm");
-        Log.d("File", mapFile.getPath());
-        try {
-            fileInputStream = new FileInputStream(mapFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         new AsyncTask<Void,Void,Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
+                FileInputStream fileInputStream = null;
+                File mapFile = new File(Environment.getExternalStorageDirectory() + "/RoomQuest/map.rqm");
+                try {
+                    fileInputStream = new FileInputStream(mapFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 try {
                     map = MapMaker.parseMapFile(fileInputStream);
                 } catch (Exception e) {

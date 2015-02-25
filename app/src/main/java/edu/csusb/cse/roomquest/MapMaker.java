@@ -57,7 +57,7 @@ public class MapMaker {
 			//print values stored in Map
 			//printMapList(mapList);
 
-            map.rooms = (Room[]) mapList.toArray();
+            map.rooms = (Room[]) mapList.toArray(new Room[0]);
             return map;
 
 		}catch(Exception e) {
@@ -71,6 +71,7 @@ public class MapMaker {
 				}
 			}
 		}
+
         return map;
     }
     // Don't need anymore
