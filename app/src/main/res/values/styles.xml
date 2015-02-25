@@ -1,8 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
 
+        <!-- the theme applied to the application or activity -->
+        <style name="AppTheme"
+            parent="@style/Theme.AppCompat">
+            <item name="android:actionBarStyle">@style/CSUSB_ActionBar</item>
+
+            <!-- Support library compatibility -->
+            <item name="actionBarStyle">@style/CSUSB_ActionBar</item>
+        </style>
+
+        <!-- ActionBar styles -->
+        <style name="CSUSB_ActionBar"
+            parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+            <item name="android:background">@color/csusb_blue</item>
+
+            <!-- Support library compatibility -->
+            <item name="background">@color/csusb_blue</item>
+        </style>
 </resources>

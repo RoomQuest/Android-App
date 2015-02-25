@@ -14,14 +14,15 @@ import java.util.List;
 
 
 public class MapMaker {
-    public void ParseMapFile(String file) {
+    public Map parseMapFile(String file) {
         try {
-            ParseMapFile(new FileInputStream(file));
+            return parseMapFile(new FileInputStream(file));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return null;
     }
-	public Map ParseMapFile(InputStream input) {
+	public static Map parseMapFile(InputStream input) {
         // Now using InputStream instead.
         // InputStreams can be files and web addresses.
 		//String mapFileToRead = "mapfiles/map.csv";
@@ -46,8 +47,8 @@ public class MapMaker {
 				//Enter csv information to Map object
 				mapObject.setName(maps[0]);
 				mapObject.setRoomType(maps[1]);
-				mapObject.setXCoord(maps[2]);
-				mapObject.setYCoord(maps[3]);
+				mapObject.setXCoord(Integer.parseInt(maps[2]));
+				mapObject.setYCoord(Integer.parseInt(maps[3]));
 				
 				//add mapObject to the list
 				mapList.add(mapObject);

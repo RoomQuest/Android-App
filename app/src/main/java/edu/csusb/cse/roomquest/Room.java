@@ -3,8 +3,8 @@ package edu.csusb.cse.roomquest;
 public class Room {
 	String Name;
 	String RoomType;
-	String X;
-	String Y;
+	int x;
+	int y;
 	
 	public String getName() {
 		return Name;
@@ -18,16 +18,16 @@ public class Room {
 	public void setRoomType(String RoomType) {
 		this.RoomType = RoomType;
 	}
-	public String getXCoord() {
-		return X;
+	public int getXCoord() {
+		return x;
 	}
-	public void setXCoord(String X) {
-		this.X = X;
+	public void setXCoord(int X) {
+		this.x = X;
 	}
-	public String getYCoord() {
-		return Y;
+	public int getYCoord() {
+		return y;
 	}
-	public void setYCoord(String Y) {
-		this.Y = Y;
+	public void setYCoord(int Y) {
+		this.y = Y;
 	}
 }

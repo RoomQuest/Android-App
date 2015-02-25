@@ -9,9 +9,10 @@ public class SearchMap {
         this.map = map;
     }
      static class SearchResults {
-
-        static class Result {
-
+         Result[] results;
+         static class Result {
+             Room room;
+             int matchStrength;
         }
     }
 }
