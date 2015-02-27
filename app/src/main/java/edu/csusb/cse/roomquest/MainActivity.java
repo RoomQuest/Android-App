@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.File;
@@ -50,6 +51,13 @@ public class MainActivity extends ActionBarActivity {
         resultsList = new ListView(this);
         resultsListAdapter = new RoomListAdapter(this);
         resultsList.setAdapter(resultsListAdapter);
+        resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                highlightRoom(resultsListAdapter.getItem(position));
+            }
+        });
+
         // Update and read files in the background.
         new AsyncTask<Void,Void,Void>() {
             @Override
@@ -86,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                Log.d("Room Quest", "closing search");
+                highlightRoom(null);
                 return false;
             }
         });
@@ -129,5 +137,10 @@ public class MainActivity extends ActionBarActivity {
             setContentView(resultsList);
             mode = Mode.DisplayResults;
         }
+    }
+
+    private void highlightRoom(Room room) {
+        mapView.highlightRoom(room);
+        showMap();
     }
 }
