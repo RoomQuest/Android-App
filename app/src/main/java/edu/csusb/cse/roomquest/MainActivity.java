@@ -29,6 +29,7 @@ public class MainActivity extends ActionBarActivity {
         View splash = getLayoutInflater().inflate(R.layout.splash, (ViewGroup) this.getWindow().getDecorView(), false);
         setContentView(splash);
         mapView = new MapView(this);
+        mapView.setLocation(352,256);
 
         // Update and read files in the background.
         new AsyncTask<Void,Void,Void>() {

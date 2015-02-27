@@ -13,9 +13,9 @@
    height="876.28998"
    id="svg3010"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="Toilet Sign.svg"
-   inkscape:export-filename="C:\Users\Michael\AndroidStudioProjects\RoomQuest\app\src\main\res\layout\toilet.png"
+   inkscape:export-filename="C:\Users\Michael\AndroidStudioProjects\Room-Quest\app\src\main\res\drawable\toilet.png"
    inkscape:export-xdpi="13.146333"
    inkscape:export-ydpi="13.146333">
   <defs
@@ -25,11 +25,11 @@
      pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="1"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="369.14191"
-     inkscape:cy="383.40694"
+     inkscape:zoom="0.15664336"
+     inkscape:cx="91.909767"
+     inkscape:cy="106.1748"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -38,9 +38,9 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:window-width="708"
-     inkscape:window-height="424"
-     inkscape:window-x="1582"
-     inkscape:window-y="151"
+     inkscape:window-height="483"
+     inkscape:window-x="218"
+     inkscape:window-y="203"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata3015">

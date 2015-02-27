@@ -34,7 +34,7 @@ public class MapMaker {
 		try {
 			br = new BufferedReader(new InputStreamReader(input));
 
-            map.mapImageName = br.readLine();
+            //map.mapImageName = br.readLine();
 			while((line = br.readLine()) != null) {
 				//split comma
 				String [] maps = line.split(splitBy);
