@@ -1,20 +1,46 @@
 package edu.csusb.cse.roomquest;
 
+import java.util.ArrayList;
+
 /**
- * Created by Michael on 2/18/2015.
+ * Contains methods to search maps.
  */
 public class SearchMap {
-    Map map;
-    public SearchMap(Map map) {
-        this.map = map;
+
+    /**
+     * Return an array of rooms matching the query.
+     * @param map the map to search.
+     * @param query the query to search for.
+     * @return an array of rooms matching the query.
+     */
+    public static Room[] SearchForRooms(Map map, String query) {
+        ArrayList<Room> roomList = new ArrayList<Room>();
+
+        for (Room room : map.rooms) {
+            if (room.getName().toLowerCase().contains(query.toLowerCase()) ||
+                    room.getRoomType().toLowerCase().contains(query.toLowerCase()))
+                roomList.add(room);
+        }
+        if (roomList.isEmpty())
+            return null;
+        else
+            return roomList.toArray(new Room[0]);
     }
-     static class SearchResults {
-         Result[] results;
-         static class Result {
-             Room room;
-             int matchStrength;
+
+    /**
+     * Not used for now:
+     */
+    public static class results {
+        static class SearchResults {
+            Result[] results;
+            static class Result {
+                Room room;
+                // Not used for now:
+                // int matchStrength;
+            }
         }
     }
+
 }
 //SearchMap sm = new SearchMap;
 //SearchMap.SearchResults sr = SearchMap.SearchResults();

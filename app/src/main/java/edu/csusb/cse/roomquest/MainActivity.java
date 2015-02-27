@@ -6,9 +6,11 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,23 +19,39 @@ import java.io.FileNotFoundException;
 
 public class MainActivity extends ActionBarActivity {
 
+    // Data
     Map map = null;
+
+    // UI
+    // Maps
     MapView mapView;
+    // Search
+    ListView resultsList;
+    RoomListAdapter resultsListAdapter;
+
+    // Action Bar
     private SearchView searchView = null;
+
+    // Mode
+    private enum Mode {
+        DisplayMap, DisplayResults, Loading
+    }
+    Mode mode = Mode.Loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Set up UI elements.
-        View splash = getLayoutInflater().inflate(R.layout.splash, (ViewGroup) this.getWindow().getDecorView(), false);
+        View splash = getLayoutInflater().inflate(R.layout.splash,
+                (ViewGroup) this.getWindow().getDecorView(), false);
         setContentView(splash);
         mapView = new MapView(this);
         mapView.setLocation(352,256);
-
+        resultsList = new ListView(this);
+        resultsListAdapter = new RoomListAdapter(this);
+        resultsList.setAdapter(resultsListAdapter);
         // Update and read files in the background.
         new AsyncTask<Void,Void,Void>() {
-
             @Override
             protected Void doInBackground(Void... params) {
                 FileInputStream fileInputStream = null;
@@ -43,11 +61,7 @@ public class MainActivity extends ActionBarActivity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                try {
-                    map = MapMaker.parseMapFile(fileInputStream);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                map = MapMaker.parseMapFile(fileInputStream);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -69,14 +83,51 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Log.d("Room Quest", "closing search");
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.d("RoomQuestSearch",s == null ? null : s);
+                search(s);
+                return false;
+            }
+        });
         return true;
     }
 
+    private void search(String query) {
+        Room[] rooms = SearchMap.SearchForRooms(map,query);
+        if (rooms != null  && query != null && !query.isEmpty()) {
+            resultsListAdapter.setRooms(rooms);
+            showSearchResults();
+        } else {
+            showMap();
+        }
+    }
+
     private void showMap() {
-        setContentView(mapView);
+        if (mode != Mode.DisplayMap) {
+            setContentView(mapView);
+            mode = Mode.DisplayMap;
+        }
     }
 
     private void showSearchResults() {
-
+        if (mode != Mode.DisplayResults) {
+            setContentView(resultsList);
+            mode = Mode.DisplayResults;
+        }
     }
 }
