@@ -107,7 +107,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Log.d("RoomQuestSearch",s == null ? null : s);
+                Log.d("RoomQuestSearch",s == null ? null : s.isEmpty() ? "empty" : s);
                 search(s);
                 return false;
             }
