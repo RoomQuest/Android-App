@@ -1,4 +1,4 @@
-package edu.csusb.cse.roomquest.UI;
+package edu.csusb.cse.roomquest.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;

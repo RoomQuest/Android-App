@@ -1,4 +1,4 @@
-package edu.csusb.cse.roomquest.UI;
+package edu.csusb.cse.roomquest.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.csusb.cse.roomquest.R;
-import edu.csusb.cse.roomquest.UI.RoomIconDrawable;
 import edu.csusb.cse.roomquest.mapping.Room;
 
 /**

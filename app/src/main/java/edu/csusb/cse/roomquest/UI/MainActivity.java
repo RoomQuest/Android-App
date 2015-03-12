@@ -1,4 +1,4 @@
-package edu.csusb.cse.roomquest.UI;
+package edu.csusb.cse.roomquest.ui;
 
 import android.os.AsyncTask;
 import android.os.Environment;
