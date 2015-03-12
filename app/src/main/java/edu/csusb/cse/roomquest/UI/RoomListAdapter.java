@@ -1,18 +1,16 @@
-package edu.csusb.cse.roomquest;
+package edu.csusb.cse.roomquest.UI;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.csusb.cse.roomquest.R;
-import edu.csusb.cse.roomquest.Room;
-import edu.csusb.cse.roomquest.RoomIconDrawable;
+import edu.csusb.cse.roomquest.UI.RoomIconDrawable;
+import edu.csusb.cse.roomquest.mapping.Room;
 
 /**
  * Created by Michael on 2/27/2015.

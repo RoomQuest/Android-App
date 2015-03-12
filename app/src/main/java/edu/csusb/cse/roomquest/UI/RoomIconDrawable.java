@@ -1,4 +1,4 @@
-package edu.csusb.cse.roomquest;
+package edu.csusb.cse.roomquest.UI;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,8 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+
+import edu.csusb.cse.roomquest.R;
+import edu.csusb.cse.roomquest.mapping.Room;
 
 /**
  * Created by Michael on 2/27/2015.
@@ -26,7 +28,7 @@ public class RoomIconDrawable extends Drawable {
     Room room = null;
 
     public RoomIconDrawable(Context context) {
-        toilet = BitmapFactory.decodeResource(context.getResources(),R.drawable.toilet);
+        toilet = BitmapFactory.decodeResource(context.getResources(), R.drawable.toilet);
         circlePaint.setColor(context.getResources().getColor(R.color.csusb_blue));
         circlePaint.setAntiAlias(true);
         textPaint.setAntiAlias(true);
