@@ -1,4 +1,4 @@
-package edu.csusb.cse.roomquest.searching;
+package edu.csusb.cse.roomquest.mapping;
 
 import java.util.ArrayList;
 

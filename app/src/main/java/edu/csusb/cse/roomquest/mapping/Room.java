@@ -3,6 +3,7 @@ package edu.csusb.cse.roomquest.mapping;
 public class Room {
 	String Name;
 	String RoomType;
+    String Floor;
 	int x;
 	int y;
 	

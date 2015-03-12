@@ -21,7 +21,7 @@ import edu.csusb.cse.roomquest.mapping.Map;
 import edu.csusb.cse.roomquest.parsing.MapMaker;
 import edu.csusb.cse.roomquest.R;
 import edu.csusb.cse.roomquest.mapping.Room;
-import edu.csusb.cse.roomquest.searching.SearchMap;
+import edu.csusb.cse.roomquest.mapping.SearchMap;
 
 import static android.os.Environment.getExternalStorageDirectory;
 

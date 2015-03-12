@@ -19,6 +19,8 @@ import edu.csusb.cse.roomquest.mapping.Map;
  */
 public class MapView extends View {
 
+    private PointF viewPort;
+
     private final static int
             LABEL_SIZE = 36,
             TEXT_SIZE = 24,
