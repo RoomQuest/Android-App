@@ -7,7 +7,9 @@ public class Room {
     }
 
     // Variables regarding a room
-    private final String name, type;
+    private final String name;
+
+    private final String type;
     private final Floor floor;
     float x, y;
 
@@ -17,5 +19,17 @@ public class Room {
         this.floor = floor;
         this.x = x;
         this.y = y;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public float getXCoord() {
+        return x;
+    }
+
+    public float getYCoord() {
+        return y;
     }
 }
