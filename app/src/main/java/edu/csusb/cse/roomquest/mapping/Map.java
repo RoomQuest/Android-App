@@ -5,6 +5,15 @@ package edu.csusb.cse.roomquest.mapping;
  */
 
 public class Map {
-    public Room[] rooms;
-    public String mapImageName;
+    public final String name, fullName;
+    public final Room[] rooms;
+    public final Floor[] floors;
+
+    public Map(String name, String fullName, Room[] rooms, Floor[] floors) {
+        this.name = name;
+        this.fullName = fullName;
+        this.rooms = rooms;
+        this.floors = floors;
+    }
+
 }

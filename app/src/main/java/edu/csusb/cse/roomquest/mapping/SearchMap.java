@@ -2,9 +2,6 @@ package edu.csusb.cse.roomquest.mapping;
 
 import java.util.ArrayList;
 
-import edu.csusb.cse.roomquest.mapping.Map;
-import edu.csusb.cse.roomquest.mapping.Room;
-
 /**
  * Contains methods to search maps.
  */
@@ -21,7 +18,7 @@ public class SearchMap {
 
         for (Room room : map.rooms) {
             if (room.getName().toLowerCase().contains(query.toLowerCase()) ||
-                    room.getRoomType().toLowerCase().contains(query.toLowerCase()))
+                    room.getType().toLowerCase().contains(query.toLowerCase()))
                 roomList.add(room);
         }
         if (roomList.isEmpty())
