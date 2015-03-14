@@ -44,7 +44,7 @@ public class RoomIconDrawable extends Drawable {
     public void draw(Canvas canvas) {
         canvas.drawCircle(getBounds().centerX(),getBounds().centerY(),getBounds().height()/2,circlePaint);
         if(room != null) {
-            switch (room.getRoomType()) {
+            switch (room.getType()) {
                 default :
                 case "bathroom" :
                     canvas.drawBitmap(toilet, new Rect(0, 0, toilet.getHeight(), toilet.getWidth()), new Rect(getBounds().width()/4,getBounds().height()/4,getBounds().width()*3/4,getBounds().height()*3/4), textPaint);

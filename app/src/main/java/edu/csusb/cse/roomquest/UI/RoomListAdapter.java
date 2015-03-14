@@ -84,7 +84,7 @@ public class RoomListAdapter extends BaseAdapter {
         }
 
         public void fill(Room room) {
-            textView.setText(room.getRoomType());
+            textView.setText(room.getType());
             roomIconDrawable.setRoom(room);
             imageView.invalidate();
         }

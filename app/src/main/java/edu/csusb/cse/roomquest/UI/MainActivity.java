@@ -68,31 +68,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(splash);
 
         // Update and read files in the background.
-        new AsyncTask<Void,Void,Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                FileInputStream fileInputStream = null;
-                File mapFile = new File(Environment.getExternalStorageDirectory() + "/RoomQuest/map.rqm");
-                try {
-                    fileInputStream = new FileInputStream(mapFile);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                map = MapMaker.parseMapFile(fileInputStream);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                mapView.loadMap(map, getExternalStorageDirectory() + "/RoomQuest/map.png");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void v) {
-                MainActivity.this.showMap();
-            }
-        }.execute();
+        new UpdateMapAsyncTask().execute();
     }
 
     @Override
@@ -151,5 +127,31 @@ public class MainActivity extends ActionBarActivity {
     private void highlightRoom(Room room) {
         mapView.highlightRoom(room);
         showMap();
+    }
+
+    private class UpdateMapAsyncTask extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            FileInputStream fileInputStream = null;
+            File mapFile = new File(Environment.getExternalStorageDirectory() + "/RoomQuest/map.rqm");
+            try {
+                fileInputStream = new FileInputStream(mapFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            map = MapMaker.parseMapFile(fileInputStream);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mapView.loadMap(map, getExternalStorageDirectory() + "/RoomQuest/map.png");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            MainActivity.this.showMap();
+        }
     }
 }

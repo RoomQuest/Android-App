@@ -85,7 +85,7 @@ public class MapView extends View {
 
     private void drawRoomLabel(Canvas canvas, Room room) {
         canvas.drawCircle(room.getXCoord(), room.getYCoord(), LABEL_SIZE, circlePaint);
-        switch (room.getRoomType()) {
+        switch (room.getType()) {
             default :
             case "bathroom" :
                 Rect dest = new Rect();
