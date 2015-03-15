@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.view.View;
 
 import edu.csusb.cse.roomquest.R;
@@ -18,7 +19,7 @@ import edu.csusb.cse.roomquest.mapping.Map;
  * Renders and allows navigation though a Map.
  */
 public class MapView extends View {
-
+    // TODO implement floors.
     private PointF viewPort;
 
     private final static int
@@ -88,7 +89,7 @@ public class MapView extends View {
         switch (room.getType()) {
             default :
             case "bathroom" :
-                Rect dest = new Rect();
+                RectF dest = new RectF();
                 dest.set(
                         room.getXCoord() - LABEL_SIZE / 2,
                         room.getYCoord() - LABEL_SIZE / 2,

@@ -50,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("TAG","onCreate");
         // Set up UI elements.
         View splash = getLayoutInflater().inflate(R.layout.splash,
                 (ViewGroup) this.getWindow().getDecorView(), false);
@@ -133,19 +134,14 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected Void doInBackground(Void... params) {
             FileInputStream fileInputStream = null;
-            File mapFile = new File(Environment.getExternalStorageDirectory() + "/RoomQuest/map.rqm");
-            try {
-                fileInputStream = new FileInputStream(mapFile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            map = MapMaker.parseMapFile(fileInputStream);
+            File mapFolder = new File(Environment.getExternalStorageDirectory(),"RoomQuest" + File.separator + "JB");
+            map = MapMaker.parseMapFolder(mapFolder,"JB","Jack Brown Hall");
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            mapView.loadMap(map, getExternalStorageDirectory() + "/RoomQuest/map.png");
+            mapView.loadMap(map, getExternalStorageDirectory() + "/RoomQuest/JB/1.png");
             return null;
         }
 
