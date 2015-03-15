@@ -22,63 +22,6 @@ import edu.csusb.cse.roomquest.mapping.Room;
 public class MapMaker {
     public static final String LOG_TAG = "MapMaker";
 
-    // TODO Remove
-    /**
-     * Create a Map object
-     * @param input The input to parse
-     * @return a Map object
-     */
-	public static Map parseMapFile(InputStream input) {
-        // Now using InputStream as input instead.
-        // InputStreams can be files and web addresses.
-
-        /*Map map = new Map();
-        List<Room> mapList = new ArrayList<Room>();
-		String line = null;
-		String splitBy = ",";
-
-        BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(input));
-
-            //map.mapImageName = br.readLine();
-			while((line = br.readLine()) != null) {
-				//split row by comma
-				String [] row = line.split(splitBy);
-				//Create room object and enter csv information to Map object
-
-                        mapList.add(new Room(
-                                row[0], // Name
-                                row[1], // Type
-                                row[2], // Floor
-                                Integer.parseInt(row[3]), // X
-                                Integer.parseInt(row[4]) // Y
-                        ));
-
-			}
-            // No need to print anymore
-			//print values stored in Map
-			//printMapList(mapList);
-
-            map.rooms = (Room[]) mapList.toArray(new Room[0]);
-            return map;
-
-		}catch(Exception e) {
-			e.printStackTrace();
-        }finally {
-			if(br != null) {
-				try {
-					br.close();
-				}catch(IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-        return map;
-        */
-        return null;
-    }
-
     /**
      *
      * @param folder The folder where the files reside (see File Structure documentation)
