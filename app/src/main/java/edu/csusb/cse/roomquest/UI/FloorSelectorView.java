@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ public class FloorSelectorView extends View {
     private static final String TAG = FloorSelectorView.class.toString();
     // Gesture detection
     GestureDetector gestureDetector;
+    OnIndexChangeListener listener;
 
     // Display metrics
     private int selectionBoxWidth;
@@ -52,7 +54,7 @@ public class FloorSelectorView extends View {
         textPaint.setTextSize(textSize);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
-        //if (isInEditMode()) {
+        if (true/*isInEditMode()*/) {
             setFloors(new Floor[]{
                     new Floor("B", null),
                     new Floor("1", null),
@@ -63,12 +65,33 @@ public class FloorSelectorView extends View {
                     new Floor("6", null),
                     new Floor("7", null)
             });
-        //}
+        }
         gestureDetector = new GestureDetector(getContext(),new GestureListener());
+        gestureDetector.setIsLongpressEnabled(false);
     }
 
-    private void setFloors(Floor[] floors) {
+    public void setFloors(Floor[] floors,int index) {
         this.floors = floors;
+        this.index = index;
+        setSelectorYFromIndex();
+        requestLayout();
+        if(listener != null) {
+            listener.onIndexChange(index,index);
+        }
+    }
+    public void setFloors(Floor[] floors) {
+        setFloors(floors,0);
+    }
+
+    public void selectFloor(Floor floor) {
+        if (floors == null || floors.length == 0) {
+            for (int i = 0; i < floors.length; i++) {
+                if (floors[i] == floor) {
+                    setIndex(i);
+                    return;
+                }
+            }
+        }
     }
 
     @Override
@@ -120,10 +143,14 @@ public class FloorSelectorView extends View {
     @Override
     protected void onMeasure(int widthSpec, int heightSpec) {
         int width = MeasureSpec.getSize(widthSpec);
-        setMeasuredDimension(
-                width,
-                width * floors.length
-        );
+        if (floors == null || floors.length == 0) {
+            setMeasuredDimension(0,0);
+        } else {
+            setMeasuredDimension(
+                    width,
+                    width * floors.length
+            );
+        }
     }
 
     @Override
@@ -134,21 +161,30 @@ public class FloorSelectorView extends View {
     }
 
     public void setIndex(int index) {
-        this.index = index;
-        setSelectorYFromIndex();
+        if (index != this.index) {
+            if (listener != null) {
+                listener.onIndexChange(index,this.index);
+            }
+            Log.d(TAG,"Index changed from " + this.index + " to " + index);
+            this.index = index;
+            setSelectorYFromIndex();
+            invalidate();
+        }
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float x, float y) {
-            setSelectorYFromCenterY(e2.getY());
-            invalidate();
+            //if (e2.getAction() == MotionEvent.ACTION_UP) { // Doesn't seem to capture on up
+                setIndexFromCenterY(e2.getY());
+            //} else {
+            //    setSelectorYFromCenterY(e2.getY());
+            //}
             return true;
         }
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             setIndexFromCenterY(e.getY());
-            invalidate();
             return true;
         }
     }
@@ -171,6 +207,10 @@ public class FloorSelectorView extends View {
                 return;
             }
         }
+    }
+
+    public interface OnIndexChangeListener {
+        public void onIndexChange(int index, int oldIndex);
     }
 
 }

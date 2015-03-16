@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import edu.csusb.cse.roomquest.R;
@@ -19,6 +21,7 @@ import edu.csusb.cse.roomquest.mapping.Map;
  * Renders and allows navigation though a Map.
  */
 public class MapView extends View {
+    private static final String TAG = MapView.class.toString();
     // TODO implement floors.
     private PointF viewPort;
 
@@ -46,7 +49,12 @@ public class MapView extends View {
     Bitmap toilet = null;
     Paint textPaint = new Paint();
 
-    MapView(Context context) {
+    public MapView(Context context, AttributeSet attrs) {
+        super(context,attrs);
+        init();
+    }
+
+    public MapView(Context context) {
         super(context);
         init();
     }
@@ -122,7 +130,11 @@ public class MapView extends View {
      */
     public void loadMap(Map map, String path) {
         this.map = map;
+        if (mapBitmap != null) {
+            mapBitmap.recycle();
+        }
         mapBitmap = BitmapFactory.decodeFile(path);
+        Log.d(TAG,"decode " + path + " " + (mapBitmap == null ? "failure" : "success"));
         postInvalidate();
     }
 

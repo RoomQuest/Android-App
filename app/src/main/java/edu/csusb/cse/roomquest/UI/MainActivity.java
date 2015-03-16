@@ -52,8 +52,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Log.d("TAG","onCreate");
         // Set up UI elements.
-        View splash = getLayoutInflater().inflate(R.layout.splash,
-                (ViewGroup) this.getWindow().getDecorView(), false);
+        View splash = getLayoutInflater().inflate(R.layout.splash, null);
         mapView = new MapView(this);
         mapView.setLocation(352,256);
         resultsList = new ListView(this);

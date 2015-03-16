@@ -1,6 +1,7 @@
 package edu.csusb.cse.roomquest.parsing;
 
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -40,14 +41,14 @@ public class MapMaker {
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(
-                    // rooms.csv path
-                    new File(folder, "rooms.csv")
+                    new File(folder, "rooms.csv") // rooms.csv path
             ));
         } catch (FileNotFoundException e) {
             // Where's the file?
             Log.e(LOG_TAG, "Can't find rooms.csv");
             return null;
         }
+        // Read the floors
         String line = null;
         try {
             // Read first line.
@@ -57,7 +58,7 @@ public class MapMaker {
                 for (int i = 0; i < floorNames.length; i++) {
                     floors[i] = new Floor(
                             floorNames[i],
-                            new File(folder,floorNames[i])
+                            new File(folder,floorNames[i] + ".png")
                     );
                 }
             } else {
@@ -101,8 +102,45 @@ public class MapMaker {
                 name, // name
                 fullName, // full name
                 roomList.toArray(new Room[roomList.size()]), // rooms
-                floors // floors
+                floors, // floors
+                folder // folder
         );
+    }
+
+    /**
+     * Get an array of the maps in the /sdcard/RoomQuest folder.
+     * @return
+     */
+    public static Map[] getMaps() {
+        return getMaps(new File(
+                Environment.getExternalStorageDirectory(),"RoomQuest"
+        ));
+    }
+
+    public static Map[] getMaps(File rootFolder) {
+        File mapsFile = new File(rootFolder,"maps.csv");
+        BufferedReader bufferedReader;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(mapsFile));
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+        String line = null;
+        List<Map> mapList = new ArrayList<Map>();
+        try {
+            while((line = bufferedReader.readLine()) != null) {
+                String[] elements = line.split(",");
+                mapList.add(parseMapFolder(
+                        new File(rootFolder,elements[0]), // folder
+                        elements[0], // name
+                        elements[1] // full name
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return mapList.toArray(new Map[mapList.size()]);
     }
 
 
