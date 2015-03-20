@@ -4,15 +4,20 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import edu.csusb.cse.roomquest.R;
+import edu.csusb.cse.roomquest.mapping.Floor;
 import edu.csusb.cse.roomquest.mapping.Room;
 import edu.csusb.cse.roomquest.mapping.Map;
 
@@ -20,34 +25,51 @@ import edu.csusb.cse.roomquest.mapping.Map;
  * Created by Michael on 2/13/2015.
  * Renders and allows navigation though a Map.
  */
+// TODO Document this mess
 public class MapView extends View {
     private static final String TAG = MapView.class.toString();
-    // TODO implement floors.
     private PointF viewPort;
 
+    // Metrics
     private final static int
-            LABEL_SIZE = 36,
-            TEXT_SIZE = 24,
-            DOT_SIZE = 12;
+            CIRCLE_SP = 20,
+            DOT_DP = 8,
+            TEXT_SP = 16,
+            STROKE_OUTLINE_DP = 1;
+    private float
+            circleSize,
+            dotSize,
+            textSize,
+            strokeOutlineSize;
 
-    // Map to display
+    // Map Data to display
     Map map = null;
+    Floor floor = null;
+    private Room highlightedRoom = null;
     Bitmap mapBitmap = null;
 
     // Location
     private PointF location;
     Paint locationPaint = new Paint();
 
-    /**
-     * Highlight Room
-     * @param highlightedRoom The room to highlight (null for none)
-     */
-    private Room highlightedRoom = null;
+    // Zooming stuff
+    float maxScale = 4;
+    ScaleGestureDetector scaleGestureDetector;
+    GestureDetector gestureDetector;
+    RectF bitmapRect, viewRect;
+    Matrix
+            concatMatrix = new Matrix(),
+            zoomMatrix = new Matrix(),
+            viewMatrix = new Matrix();
+    float zoom = 1;
 
     // Paints
     Paint circlePaint = new Paint();
-    Bitmap toilet = null;
     Paint textPaint = new Paint();
+    Paint whiteOutline = new Paint();
+
+    // icons
+    Drawable toilet = null;
 
     public MapView(Context context, AttributeSet attrs) {
         super(context,attrs);
@@ -60,68 +82,103 @@ public class MapView extends View {
     }
 
     private void init() {
+        // Set up sizes
+        float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
+        float density = getResources().getDisplayMetrics().density;
+        textSize = TEXT_SP * scaledDensity;
+        circleSize = CIRCLE_SP * scaledDensity;
+        dotSize = DOT_DP * density;
+        strokeOutlineSize = STROKE_OUTLINE_DP * density;
+        // Set up Paints;
         circlePaint.setAntiAlias(true);
         circlePaint.setColor(getContext().getResources().getColor(R.color.csusb_blue));
-        toilet = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.toilet);
+        whiteOutline.setColor(0xFFFFFFFF);
+        whiteOutline.setStyle(Paint.Style.STROKE);
+        whiteOutline.setAntiAlias(true);
+        whiteOutline.setStrokeWidth(strokeOutlineSize);
         locationPaint.setColor(0xFFFF0000);
         locationPaint.setAntiAlias(true);
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setTextSize(TEXT_SIZE);
+        textPaint.setTextSize(textSize);
         textPaint.setColor(0xFFFFFFFF);
+
+        // load icons
+        toilet = getResources().getDrawable(R.drawable.toilet);
+
+        // set up zoom
+        scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
+        gestureDetector = new GestureDetector(getContext(),new GestureListener());
+        // concatMatrix.postScale(2,2);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //canvas.scale(1.5f,1.5f);
+        super.onDraw(canvas);
         if (map == null)
             return;
-        canvas.drawBitmap(mapBitmap, 0, 0, circlePaint);
+        canvas.drawBitmap(mapBitmap, concatMatrix, circlePaint);
+
         if (highlightedRoom == null) {
-            for (Room room : map.rooms) {
+            for (Room room : map.rooms) {// draw normally
                 drawRoomLabel(canvas, room);
             }
         } else {
-            for (Room room : map.rooms) {
+            for (Room room : map.rooms) { // hide others
                 if (room != highlightedRoom)
                     drawRoomDot(canvas,room);
             }
             drawRoomLabel(canvas, highlightedRoom);
         }
         if (location != null)
-            canvas.drawCircle(location.x,location.y,DOT_SIZE,locationPaint);
+            drawLocation(canvas);
+    }
+
+    private void drawLocation(Canvas canvas) {
+        float[] point = new float[2];
+        point[0]=location.x;
+        point[1]=location.y;
+        concatMatrix.mapPoints(point);
+        float x = point[0], y = point[1];
+        canvas.drawCircle(x, y, dotSize,locationPaint);
     }
 
     private void drawRoomLabel(Canvas canvas, Room room) {
-        canvas.drawCircle(room.getXCoord(), room.getYCoord(), LABEL_SIZE, circlePaint);
+        float[] point = new float[2];
+        point[0]=room.getXCoord();
+        point[1]=room.getYCoord();
+        concatMatrix.mapPoints(point);
+        float x = point[0], y = point[1];
+        canvas.drawCircle(x, y, circleSize, circlePaint);
+        canvas.drawCircle(x, y, circleSize, whiteOutline);
         switch (room.getType()) {
             default :
             case "bathroom" :
-                RectF dest = new RectF();
-                dest.set(
-                        room.getXCoord() - LABEL_SIZE / 2,
-                        room.getYCoord() - LABEL_SIZE / 2,
-                        room.getXCoord() + LABEL_SIZE / 2,
-                        room.getYCoord() + LABEL_SIZE / 2
+                toilet.setBounds(
+                        (int)(x - circleSize / 2),
+                        (int)(y - circleSize / 2),
+                        (int)(x + circleSize / 2),
+                        (int)(y + circleSize / 2)
                 );
-                canvas.drawBitmap(toilet, new Rect(0, 0, toilet.getHeight(), toilet.getWidth()), dest, circlePaint);
+                toilet.draw(canvas);
                 break;
             case "classroom" :
-                canvas.drawText(room.getName(),room.getXCoord(),room.getYCoord() + TEXT_SIZE/2,textPaint);
+                canvas.drawText(room.getName(),x,y + textSize/3,textPaint);
                 break;
         }
     }
 
     private void drawRoomDot(Canvas canvas,Room room) {
-        canvas.drawCircle(room.getXCoord(),room.getYCoord(),DOT_SIZE,circlePaint);
+        float[] point = new float[2];
+        point[0]=room.getXCoord();
+        point[1]=room.getYCoord();
+        concatMatrix.mapPoints(point);
+        float x = point[0], y = point[1];
+        canvas.drawCircle(x, y, dotSize, circlePaint);
     }
 
     public void setLocation(float x, float y) {
         location = new PointF(x,y);
-    }
-
-    public void setLocation(PointF point) {
-        location = point;
     }
 
     /**
@@ -136,6 +193,9 @@ public class MapView extends View {
         mapBitmap = BitmapFactory.decodeFile(path);
         Log.d(TAG,"decode " + path + " " + (mapBitmap == null ? "failure" : "success"));
         postInvalidate();
+
+        updateBaseMatrix();
+        updateConcatMatrix();
     }
 
     /**
@@ -145,5 +205,90 @@ public class MapView extends View {
     public void highlightRoom(Room room) {
         highlightedRoom = room;
         invalidate();
+    }
+
+   @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        boolean ret = super.onTouchEvent(e);
+        ret |= scaleGestureDetector.onTouchEvent(e);
+        if (!scaleGestureDetector.isInProgress())
+            ret |= gestureDetector.onTouchEvent(e);
+        return ret;
+   }
+
+    private void updateBaseMatrix() {
+        if (mapBitmap != null) {
+            viewMatrix.setRectToRect(
+                    new RectF(0, 0, mapBitmap.getWidth(), mapBitmap.getHeight()),
+                    new RectF(0, 0, getWidth(), getHeight()),
+                    Matrix.ScaleToFit.END
+            );
+        } else {
+            viewMatrix.reset();
+        }
+    }
+
+    private void updateConcatMatrix() {
+        concatMatrix.set(viewMatrix);
+        concatMatrix.postConcat(zoomMatrix);
+    }
+
+    @Override
+    public void onSizeChanged(int x, int y, int oldx, int oldy) {
+        super.onSizeChanged(x,y,oldx,oldy);
+        updateBaseMatrix();
+        updateConcatMatrix();
+    }
+
+    private void translateBy(float dx,float dy) {
+        zoomMatrix.postTranslate(dx, dy);
+        updateConcatMatrix();
+    }
+
+    private void scaleBy(float s, float x, float y) {
+        float currentScale = zoomMatrix.mapRadius(1);
+        if (currentScale * s > maxScale)
+            s = maxScale / currentScale;
+        else if (currentScale * s < 1)
+            s = 1 / currentScale;
+        zoomMatrix.postScale(s, s, x, y);
+    }
+
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        float lastX, lastY;
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            //Log.d(TAG,"Scale Begin");
+            lastX = detector.getFocusX();
+            lastY = detector.getFocusY();
+            return true;
+        }
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            //Log.d(TAG, "Scale: " + detector.getScaleFactor());
+            float x = detector.getFocusX(), y = detector.getFocusY();
+            translateBy(x - lastX, y - lastY);
+            scaleBy(detector.getScaleFactor(),x,y);
+            updateConcatMatrix();
+            invalidate();
+            lastX = x;
+            lastY = y;
+            return true;
+        }
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            //Log.d(TAG, "Scale ended");
+        }
+
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float x, float y) {
+            translateBy(-x, -y);
+            updateConcatMatrix();
+            invalidate();
+            return true;
+        }
     }
 }
