@@ -210,9 +210,11 @@ public class MapView extends View {
    @Override
     public boolean onTouchEvent(MotionEvent e) {
         boolean ret = super.onTouchEvent(e);
-        ret |= scaleGestureDetector.onTouchEvent(e);
-        if (!scaleGestureDetector.isInProgress())
-            ret |= gestureDetector.onTouchEvent(e);
+       if (mapBitmap != null) { // lol, zoom null? Not a chance.
+           ret |= scaleGestureDetector.onTouchEvent(e);
+           if (!scaleGestureDetector.isInProgress())
+               ret |= gestureDetector.onTouchEvent(e);
+       }
         return ret;
    }
 
@@ -221,7 +223,7 @@ public class MapView extends View {
             viewMatrix.setRectToRect(
                     new RectF(0, 0, mapBitmap.getWidth(), mapBitmap.getHeight()),
                     new RectF(0, 0, getWidth(), getHeight()),
-                    Matrix.ScaleToFit.END
+                    Matrix.ScaleToFit.CENTER
             );
         } else {
             viewMatrix.reset();
@@ -241,6 +243,23 @@ public class MapView extends View {
     }
 
     private void translateBy(float dx,float dy) {
+        RectF map = new RectF(
+                0,
+                0,
+                mapBitmap.getWidth(),
+                mapBitmap.getHeight()
+        );
+        concatMatrix.mapRect(map);
+        float cx = getWidth()/2;
+        float cy = getHeight()/2;
+        if (map.left + dx > cx)
+            dx = cx - map.left;
+        else if (map.right + dx < cx)
+            dx = cx - map.right;
+        if (map.top + dy > cy)
+            dy = cy - map.top;
+        else if (map.bottom + dy < cy)
+            dy = cy - map.bottom;
         zoomMatrix.postTranslate(dx, dy);
         updateConcatMatrix();
     }
