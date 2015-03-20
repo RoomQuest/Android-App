@@ -290,5 +290,13 @@ public class MapView extends View {
             invalidate();
             return true;
         }
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            //Log.d(TAG, "onDoubleTap()");
+            scaleBy(2f,e.getX(),e.getY());
+            updateConcatMatrix();
+            invalidate();
+            return true;
+        }
     }
 }
