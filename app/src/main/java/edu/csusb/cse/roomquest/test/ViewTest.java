@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -73,7 +74,7 @@ public class ViewTest extends ActionBarActivity {
         @Override
         public void run() {
             try {
-                runOnUiThread(new Runnable() {
+                /*runOnUiThread(new Runnable() {
                     public void run() {
                         progress.setVisibility(View.VISIBLE);
                     }
@@ -85,7 +86,7 @@ public class ViewTest extends ActionBarActivity {
                         }
                     });
                     Thread.sleep(50);
-                }
+                }*/
                 // Load maps
                 Log.d(TAG,"loading maps");
                 maps = MapMaker.getMaps();
@@ -127,5 +128,11 @@ public class ViewTest extends ActionBarActivity {
             }
         });
         mapListView.addHeaderView(getLayoutInflater().inflate(R.layout.map_list_header,mapListView,false),null,false);
+
+        // set up drawer
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, R.string.app_name, R.string.app_name);
+        navDrawer.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
     }
 }

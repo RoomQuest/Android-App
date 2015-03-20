@@ -14,10 +14,9 @@
             android:layout_height="match_parent"
             android:id="@+id/map" />
 
-        <view
+        <edu.csusb.cse.roomquest.ui.FloorSelectorView
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            class="edu.csusb.cse.roomquest.ui.FloorSelectorView"
             android:id="@+id/view2"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
