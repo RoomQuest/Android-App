@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import edu.csusb.cse.roomquest.R;
 import edu.csusb.cse.roomquest.mapping.Map;
 import edu.csusb.cse.roomquest.parsing.MapMaker;
+import edu.csusb.cse.roomquest.test.downloader.Spot;
 import edu.csusb.cse.roomquest.ui.MapView;
 
 /**
@@ -59,6 +60,7 @@ public class MainActivityTest extends ActionBarActivity {
      */
     private void loadMaps() {
         setContentView(R.layout.splash);
+        getSupportActionBar().hide();
 
         // Find UI
         progress = (ProgressBar) findViewById(R.id.progress);
@@ -74,12 +76,12 @@ public class MainActivityTest extends ActionBarActivity {
         @Override
         public void run() {
             try {
-                /*runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     public void run() {
                         progress.setVisibility(View.VISIBLE);
                     }
                 });
-                for (i = 0; i <= 100; i++) {
+                /*for (i = 0; i <= 100; i++) {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             progress.setProgress(i);
@@ -88,6 +90,8 @@ public class MainActivityTest extends ActionBarActivity {
                     Thread.sleep(50);
                 }*/
                 // Load maps
+                Log.d(TAG,"downloading maps");
+                Spot.fetch();
                 Log.d(TAG,"loading maps");
                 maps = MapMaker.getMaps();
                 Log.d(TAG,"Complete, " + ((maps == null) ? "null" : "not null"));
@@ -107,12 +111,16 @@ public class MainActivityTest extends ActionBarActivity {
         }
     }
 
+    /**
+     * Show the main UI
+     */
     private void loadMapUi() {
         if (maps == null || maps.length == 0) {
             setContentView(R.layout.unable_to_load);
             return;
         }
         setContentView(R.layout.activity_main);
+        getSupportActionBar().show();
         // Find views
         navDrawer = (DrawerLayout) findViewById(R.id.drawer);
         mapListView = (ListView) findViewById(R.id.map_list);
