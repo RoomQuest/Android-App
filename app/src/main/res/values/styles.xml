@@ -5,16 +5,20 @@
         <!-- the theme applied to the application or activity -->
         <style name="AppTheme"
             parent="@style/Theme.AppCompat">
-            <item name="android:actionBarStyle">@style/CSUSB_ActionBar</item>
+            <!-- Don't need anymore -->
+            <!--<item name="android:actionBarStyle">@style/CSUSB_ActionBar</item>-->
             <item name="android:windowBackground">@android:color/black</item>
+            <item name="colorPrimary">@color/csusb_blue</item>
+            <item name="colorPrimaryDark">@color/csusb_blue</item>
             <!-- Support library compatibility -->
-            <item name="actionBarStyle">@style/CSUSB_ActionBar</item>
+            <!--<item name="actionBarStyle">@style/CSUSB_ActionBar</item>-->
         </style>
 
         <!-- ActionBar styles -->
+        <!-- Don't need anymore kept in case of future modifications -->
         <style name="CSUSB_ActionBar"
             parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-            <item name="android:background">@color/csusb_blue</item>
+            <!--<item name="android:background">@color/csusb_blue</item>-->
 
             <!-- Support library compatibility -->
             <item name="background">@color/csusb_blue</item>
