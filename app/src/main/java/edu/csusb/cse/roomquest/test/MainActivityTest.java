@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,7 +20,8 @@ import android.widget.ProgressBar;
 import edu.csusb.cse.roomquest.R;
 import edu.csusb.cse.roomquest.mapping.Map;
 import edu.csusb.cse.roomquest.parsing.MapMaker;
-import edu.csusb.cse.roomquest.test.downloader.Spot;
+import edu.csusb.cse.roomquest.downloader.Spot;
+import edu.csusb.cse.roomquest.ui.FloorSelectorView;
 import edu.csusb.cse.roomquest.ui.MapView;
 
 /**
@@ -36,9 +38,12 @@ public class MainActivityTest extends ActionBarActivity {
     DrawerLayout navDrawer;
     MapView mapView;
     ListView mapListView;
+    private FloorSelectorView floorsView;
 
     // Data
     Map[] maps;
+    private Map map;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -121,26 +126,63 @@ public class MainActivityTest extends ActionBarActivity {
         }
         setContentView(R.layout.activity_main);
         getSupportActionBar().show();
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
         // Find views
         navDrawer = (DrawerLayout) findViewById(R.id.drawer);
         mapListView = (ListView) findViewById(R.id.map_list);
         mapView = (MapView) findViewById(R.id.map);
+        floorsView = (FloorSelectorView) findViewById(R.id.floor_view);
         // set up behavior
-        navDrawer.openDrawer(mapListView);
         mapListView.setAdapter(new ArrayAdapter<Map>(this,android.R.layout.simple_list_item_1,maps));
         mapListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mapView.loadMap((Map)parent.getItemAtPosition(position),((Map)parent.getItemAtPosition(position)).floors[0].getImageFile().getPath());
+                map = (Map)parent.getItemAtPosition(position);
+                mapView.loadMap((Map) parent.getItemAtPosition(position), map.floors[0].getImageFile().getPath());
+                floorsView.setFloors(map.floors,0);
                 navDrawer.closeDrawer(mapListView);
             }
         });
         mapListView.addHeaderView(getLayoutInflater().inflate(R.layout.map_list_header,mapListView,false),null,false);
 
         // set up drawer
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, R.string.app_name, R.string.app_name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, R.string.app_name, R.string.hello_world) {
+            @Override
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                if (map != null)
+                    getSupportActionBar().setTitle(map.fullName);
+                else
+                    getSupportActionBar().setTitle("Select Building");
+                syncState();
+            }
+            @Override
+            public void onDrawerOpened(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(getTitle());
+                syncState();
+            }
+        };
         navDrawer.setDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        navDrawer.openDrawer(mapListView);
+        actionBarDrawerToggle.syncState();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item))
+            return true;
+        else
+            return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+    }
+
 }

@@ -1,4 +1,4 @@
-package edu.csusb.cse.roomquest.test.downloader;
+package edu.csusb.cse.roomquest.downloader;
 
 import android.os.Environment;
 import android.util.Log;
@@ -6,13 +6,9 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -30,7 +26,7 @@ import javax.net.ssl.X509TrustManager;
 public class Spot {
     public static final String DEFAULT_URL =
             "https://139.182.134.143/RoomQuest/MapData/raw/master/RoomQuest.zip";
-    public static final File FOLDER = new File(Environment.getExternalStorageDirectory(), "RoomQuest");
+    public static final File MAP_FOLDER = new File(Environment.getExternalStorageDirectory(), "RoomQuest");
     private static boolean trustingEveryone = false;
 
     // Since we're too poor to acquire an official certificate...
@@ -102,11 +98,11 @@ public class Spot {
     }
 
     private static void extract(ZipInputStream zi) throws IOException {
-        if (FOLDER.exists())
-            eraseFolderContents(FOLDER);
+        if (MAP_FOLDER.exists())
+            eraseFolderContents(MAP_FOLDER);
         else
-            FOLDER.mkdirs();
-        extract(zi,FOLDER);
+            MAP_FOLDER.mkdirs();
+        extract(zi, MAP_FOLDER);
     }
 
     private static void extract(ZipInputStream zi, File outFolder) throws IOException {
@@ -115,8 +111,8 @@ public class Spot {
             return;
         byte[] buffer = new byte[1024];
         while(ze != null) {
-            Log.i("Spot", "unzipping " + ze);
             File outFile = new File(outFolder,ze.getName());
+            Log.i("Spot", "unzipping " + outFile);
             outFile.getParentFile().mkdirs();
             FileOutputStream fos = new FileOutputStream(outFile);
             int len;

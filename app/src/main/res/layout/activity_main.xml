@@ -17,7 +17,7 @@
         <edu.csusb.cse.roomquest.ui.FloorSelectorView
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:id="@+id/view2"
+            android:id="@+id/floor_view"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
