@@ -10,8 +10,9 @@ public class Room {
     private final String name;
 
     private final String type;
+
     private final Floor floor;
-    float x, y;
+    private float x, y;
 
     public Room(String name, String type, Floor floor, int x, int y) {
         this.name = name;
@@ -32,4 +33,9 @@ public class Room {
     public float getYCoord() {
         return y;
     }
+
+    public Floor getFloor() {
+        return floor;
+    }
+
 }

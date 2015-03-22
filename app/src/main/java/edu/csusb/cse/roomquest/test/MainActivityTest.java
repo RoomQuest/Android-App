@@ -2,6 +2,7 @@ package edu.csusb.cse.roomquest.test;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,6 +46,9 @@ public class MainActivityTest extends ActionBarActivity {
     Map[] maps;
     private Map map;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+
+    // State info
+    private boolean showMenu = false;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -138,7 +143,7 @@ public class MainActivityTest extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 map = (Map)parent.getItemAtPosition(position);
-                mapView.loadMap((Map) parent.getItemAtPosition(position), map.floors[0].getImageFile().getPath());
+                mapView.loadMap((Map) parent.getItemAtPosition(position), map.floors[0]);
                 floorsView.setFloors(map.floors,0);
                 navDrawer.closeDrawer(mapListView);
             }
@@ -164,11 +169,47 @@ public class MainActivityTest extends ActionBarActivity {
                 getSupportActionBar().setTitle(getTitle());
                 syncState();
             }
+            @Override
+            public void onDrawerStateChanged(int state) {
+                super.onDrawerStateChanged(state);
+                if (state == DrawerLayout.STATE_DRAGGING) {
+                    showMenu(false);
+                } else if (state == DrawerLayout.STATE_IDLE) {
+                    if (!navDrawer.isDrawerOpen(mapListView))
+                        showMenu(true);
+                }
+            }
         };
         navDrawer.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         navDrawer.openDrawer(mapListView);
         actionBarDrawerToggle.syncState();
+
+        // set up floor list selector
+        floorsView.setOnIndexChangeListener(new FloorSelectorView.OnIndexChangeListener() {
+            @Override
+            public void onIndexChange(int index, int oldIndex) {
+                mapView.loadMap(map,map.floors[index]);
+                Log.d(TAG,"index changed");
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return showMenu;
+    }
+
+    private void showMenu(boolean show) {
+        showMenu = show;
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return showMenu;
     }
 
     @Override
@@ -180,9 +221,11 @@ public class MainActivityTest extends ActionBarActivity {
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
+    public void onConfigurationChanged(Configuration config) {
+        super.onConfigurationChanged(config);
+        if (actionBarDrawerToggle != null) {
+            actionBarDrawerToggle.onConfigurationChanged(config);
+        }
     }
 
 }

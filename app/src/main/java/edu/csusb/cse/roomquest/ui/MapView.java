@@ -50,7 +50,6 @@ public class MapView extends View {
 
     // Location
     private PointF location;
-    Paint locationPaint = new Paint();
 
     // Zooming stuff
     float maxScale = 4;
@@ -67,6 +66,7 @@ public class MapView extends View {
     Paint circlePaint = new Paint();
     Paint textPaint = new Paint();
     Paint whiteOutline = new Paint();
+    Paint locationPaint = new Paint();
 
     // icons
     Drawable toilet = null;
@@ -112,23 +112,37 @@ public class MapView extends View {
         // concatMatrix.postScale(2,2);
     }
 
+    /**
+     * Draw the map.
+     * @param canvas used for drawing calls.
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (map == null)
+        if (mapBitmap == null) {
+            String message;
+            if (map == null)
+                message = "No map selected";
+            else
+                message = "Unable to view map image";
+            canvas.drawText(message, getWidth()/2, getHeight()/2, textPaint);
             return;
+        }
         canvas.drawBitmap(mapBitmap, concatMatrix, circlePaint);
 
         if (highlightedRoom == null) {
-            for (Room room : map.rooms) {// draw normally
-                drawRoomLabel(canvas, room);
+            for (Room room : map.rooms) {// Draw normally
+                if (room.getFloor() == floor);
+                    drawRoomLabel(canvas, room);
             }
         } else {
-            for (Room room : map.rooms) { // hide others
-                if (room != highlightedRoom)
-                    drawRoomDot(canvas,room);
+            for (Room room : map.rooms) { // Hide others
+                if (room.getFloor() == floor);
+                    if (room != highlightedRoom)
+                        drawRoomDot(canvas,room);
             }
-            drawRoomLabel(canvas, highlightedRoom);
+            if (highlightedRoom.getFloor() == floor) // Draw highlighted room normally.
+                drawRoomLabel(canvas, highlightedRoom);
         }
         if (location != null)
             drawLocation(canvas);
@@ -183,19 +197,26 @@ public class MapView extends View {
 
     /**
      * Prepare to view a given map. This will load the
-     * @param map The map to load
+     * @param map The map to load.
+     * @param floor the floor to load.
      */
-    public void loadMap(Map map, String path) {
+    public void loadMap(Map map, Floor floor) {
         this.map = map;
+        this.floor = floor;
         if (mapBitmap != null) {
             mapBitmap.recycle();
+            mapBitmap = null;
         }
-        mapBitmap = BitmapFactory.decodeFile(path);
-        Log.d(TAG,"decode " + path + " " + (mapBitmap == null ? "failure" : "success"));
-        postInvalidate();
-
-        updateBaseMatrix();
-        updateConcatMatrix();
+        if (map != null && floor != null) {
+            if (floor.getImageFile().exists())
+                mapBitmap = BitmapFactory.decodeFile(floor.getImageFile().getPath());
+            updateBaseMatrix();
+            updateConcatMatrix();
+        }
+        else
+            mapBitmap = null;
+        Log.d(TAG, "decode " + floor + " " + (mapBitmap == null ? "failure" : "success"));
+        invalidate();
     }
 
     /**

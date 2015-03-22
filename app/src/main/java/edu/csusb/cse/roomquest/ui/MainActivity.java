@@ -140,7 +140,7 @@ public class MainActivity extends ActionBarActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            mapView.loadMap(map, getExternalStorageDirectory() + "/RoomQuest/JB/1.png");
+            mapView.loadMap(map, map.floors[0]/*getExternalStorageDirectory() + "/RoomQuest/JB/1.png"*/);
             return null;
         }
 

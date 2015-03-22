@@ -54,7 +54,7 @@ public class FloorSelectorView extends View {
         textPaint.setTextSize(textSize);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
-        if (true/*isInEditMode()*/) {
+        if (isInEditMode()) {
             setFloors(new Floor[]{
                     new Floor("B", null),
                     new Floor("1", null),
@@ -162,14 +162,19 @@ public class FloorSelectorView extends View {
 
     public void setIndex(int index) {
         if (index != this.index) {
-            if (listener != null) {
-                listener.onIndexChange(index,this.index);
-            }
-            Log.d(TAG,"Index changed from " + this.index + " to " + index);
+            int lastIndex = this.index;
             this.index = index;
+            Log.d(TAG,"Index changed from " + lastIndex + " to " + index);
+            if (listener != null) {
+                listener.onIndexChange(index,lastIndex);
+            }
             setSelectorYFromIndex();
             invalidate();
         }
+    }
+
+    public void setOnIndexChangeListener(OnIndexChangeListener listener) {
+        this.listener = listener;
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
