@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.csusb.cse.roomquest.downloader.Spot;
 import edu.csusb.cse.roomquest.mapping.Floor;
 import edu.csusb.cse.roomquest.mapping.Map;
 import edu.csusb.cse.roomquest.mapping.Room;
@@ -112,9 +113,7 @@ public class MapMaker {
      * @return
      */
     public static Map[] getMaps() {
-        return getMaps(new File(
-                Environment.getExternalStorageDirectory(),"RoomQuest"
-        ));
+        return getMaps(Spot.MAP_FOLDER);
     }
 
     public static Map[] getMaps(File rootFolder) {

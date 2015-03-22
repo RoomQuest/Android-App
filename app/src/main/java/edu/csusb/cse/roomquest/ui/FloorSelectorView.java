@@ -76,7 +76,7 @@ public class FloorSelectorView extends View {
         setSelectorYFromIndex();
         requestLayout();
         if(listener != null) {
-            listener.onIndexChange(index,index);
+            listener.onIndexChange(index);
         }
     }
     public void setFloors(Floor[] floors) {
@@ -162,11 +162,10 @@ public class FloorSelectorView extends View {
 
     public void setIndex(int index) {
         if (index != this.index) {
-            int lastIndex = this.index;
+            Log.d(TAG,"Index changed from " + this.index + " to " + index);
             this.index = index;
-            Log.d(TAG,"Index changed from " + lastIndex + " to " + index);
             if (listener != null) {
-                listener.onIndexChange(index,lastIndex);
+                listener.onIndexChange(index);
             }
             setSelectorYFromIndex();
             invalidate();
@@ -215,7 +214,7 @@ public class FloorSelectorView extends View {
     }
 
     public interface OnIndexChangeListener {
-        public void onIndexChange(int index, int oldIndex);
+        public void onIndexChange(int index);
     }
 
 }

@@ -101,6 +101,7 @@ public class MainActivityTest extends ActionBarActivity {
                 }*/
                 // Load maps
                 Log.d(TAG,"downloading maps");
+                Spot.loadCert(getResources().openRawResource(R.raw.csusb));
                 Spot.fetch();
                 Log.d(TAG,"loading maps");
                 maps = MapMaker.getMaps();
@@ -188,9 +189,9 @@ public class MainActivityTest extends ActionBarActivity {
         // set up floor list selector
         floorsView.setOnIndexChangeListener(new FloorSelectorView.OnIndexChangeListener() {
             @Override
-            public void onIndexChange(int index, int oldIndex) {
+            public void onIndexChange(int index) {
                 mapView.loadMap(map,map.floors[index]);
-                Log.d(TAG,"index changed");
+                Log.i(TAG, "Loading " + map.floors[index]);
             }
         });
     }
