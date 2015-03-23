@@ -3,14 +3,14 @@ package edu.csusb.cse.roomquest.mapping;
 import java.util.ArrayList;
 
 /**
- * Contains methods to search maps.
+ * Contains methods to edu.csusb.cse.roomquest.search maps.
  */
 public class SearchMap {
 
     /**
      * Return an array of rooms matching the query.
-     * @param map the map to search.
-     * @param query the query to search for.
+     * @param map the map to edu.csusb.cse.roomquest.search.
+     * @param query the query to edu.csusb.cse.roomquest.search for.
      * @return an array of rooms matching the query.
      */
     public static Room[] SearchForRooms(Map map, String query) {

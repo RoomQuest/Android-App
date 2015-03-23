@@ -6,9 +6,11 @@ import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +22,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import edu.csusb.cse.roomquest.R;
+import edu.csusb.cse.roomquest.mapping.Floor;
 import edu.csusb.cse.roomquest.mapping.Map;
+import edu.csusb.cse.roomquest.mapping.Room;
 import edu.csusb.cse.roomquest.parsing.MapMaker;
 import edu.csusb.cse.roomquest.downloader.Spot;
 import edu.csusb.cse.roomquest.ui.FloorSelectorView;
@@ -41,6 +45,7 @@ public class MainActivityTest extends ActionBarActivity {
     MapView mapView;
     ListView mapListView;
     private FloorSelectorView floorsView;
+    SearchView searchView;
 
     // Data
     Map[] maps;
@@ -138,14 +143,12 @@ public class MainActivityTest extends ActionBarActivity {
         mapListView = (ListView) findViewById(R.id.map_list);
         mapView = (MapView) findViewById(R.id.map);
         floorsView = (FloorSelectorView) findViewById(R.id.floor_view);
-        // set up behavior
-        mapListView.setAdapter(new ArrayAdapter<Map>(this,android.R.layout.simple_list_item_1,maps));
+        // set up the ListView in the NavigationDrawer
+        mapListView.setAdapter(new ArrayAdapter<Map>(getSupportActionBar().getThemedContext(),android.R.layout.simple_list_item_1,maps));
         mapListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                map = (Map)parent.getItemAtPosition(position);
-                mapView.loadMap((Map) parent.getItemAtPosition(position), map.floors[0]);
-                floorsView.setFloors(map.floors,0);
+                displayMap((Map) parent.getItemAtPosition(position));
                 navDrawer.closeDrawer(mapListView);
             }
         });
@@ -196,11 +199,61 @@ public class MainActivityTest extends ActionBarActivity {
         });
     }
 
+    private void displayMap(Map map) {
+        this.map = map;
+        mapView.loadMap(map,map.floors[0]);
+        if (map.floors.length <= 1)
+            floorsView.setFloors(null);
+        else
+            floorsView.setFloors(map.floors,0);
+    }
+
+    private void displayMap(Map map, Floor floor) {
+        this.map = map;
+        mapView.loadMap(map,floor);
+        if (map.floors.length <= 1)
+            floorsView.setFloors(null);
+        else
+            floorsView.setFloors(map.floors,floor);
+    }
+
+    private void displayFloor(Floor floor) {
+        mapView.loadFloor(floor);
+        floorsView.selectFloor(floor);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main,menu);
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                highlightRoom(null);
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.d("RoomQuestSearch",s == null ? null : s.isEmpty() ? "empty" : s);
+                //search(s);
+                return false;
+            }
+        });
         return showMenu;
+    }
+
+    private void highlightRoom(Room room) {
+        mapView.highlightRoom(room);
+        mapView.loadFloor(room.getFloor());
     }
 
     private void showMenu(boolean show) {

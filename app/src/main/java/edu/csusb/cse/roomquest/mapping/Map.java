@@ -11,6 +11,7 @@ public class Map {
     public final Room[] rooms;
     public final Floor[] floors;
     public final File folder;
+    public final RoomAliases[] roomsAliases;
 
     public Map(String name, String fullName, Room[] rooms, Floor[] floors, File folder) {
         this.name = name;
@@ -18,6 +19,7 @@ public class Map {
         this.rooms = rooms;
         this.floors = floors;
         this.folder = folder;
+        this.roomsAliases = null;
     }
 
     public String toString() {

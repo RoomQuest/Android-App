@@ -195,13 +195,7 @@ public class MapView extends View {
         location = new PointF(x,y);
     }
 
-    /**
-     * Prepare to view a given map. This will load the
-     * @param map The map to load.
-     * @param floor the floor to load.
-     */
-    public void loadMap(Map map, Floor floor) {
-        this.map = map;
+    public void loadFloor(Floor floor) {
         this.floor = floor;
         if (mapBitmap != null) {
             mapBitmap.recycle();
@@ -217,6 +211,15 @@ public class MapView extends View {
             mapBitmap = null;
         Log.d(TAG, "decode " + floor + " " + (mapBitmap == null ? "failure" : "success"));
         invalidate();
+    }
+    /**
+     * Prepare to view a given map. This will load the
+     * @param map The map to load.
+     * @param floor the floor to load.
+     */
+    public void loadMap(Map map, Floor floor) {
+        this.map = map;
+        loadFloor(floor);
     }
 
     /**

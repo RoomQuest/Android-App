@@ -117,6 +117,7 @@ public class MapMaker {
     }
 
     public static Map[] getMaps(File rootFolder) {
+        // contains a list of the folders;
         File mapsFile = new File(rootFolder,"maps.csv");
         BufferedReader bufferedReader;
         try {

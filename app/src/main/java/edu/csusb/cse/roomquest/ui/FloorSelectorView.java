@@ -70,6 +70,11 @@ public class FloorSelectorView extends View {
         gestureDetector.setIsLongpressEnabled(false);
     }
 
+    public void setFloors(Floor[] floors, Floor floor) {
+        this.floors = floors;
+        selectFloor(floor);
+    }
+
     public void setFloors(Floor[] floors,int index) {
         this.floors = floors;
         this.index = index;
