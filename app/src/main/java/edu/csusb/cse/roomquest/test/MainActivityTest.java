@@ -167,6 +167,7 @@ private class InitialLoad implements Runnable {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 displayMap((Map) parent.getItemAtPosition(position));
                 highlightRoom(null);
+                hideSearch();
                 navDrawer.closeDrawer(mapListView);
             }
         });
@@ -183,10 +184,7 @@ private class InitialLoad implements Runnable {
                     highlightRoom(r.getRoom());
                 } catch (ClassCastException e) {
                 }
-                searchView.setIconified(true); // clear it
-                searchView.setIconified(true); // close it, WTF ANDROID API???
-                // I had to read the android suppor library source at 3:00am to figure that one out!
-                // https://github.com/android/platform_frameworks_support/blob/master/v7/appcompat/src/android/support/v7/widget/SearchView.java
+                hideSearch();
             }
         });
         // set up drawer
@@ -213,6 +211,7 @@ private class InitialLoad implements Runnable {
             public void onDrawerStateChanged(int state) {
                 super.onDrawerStateChanged(state);
                 if (state == DrawerLayout.STATE_DRAGGING) {
+                    hideResults();
                     showMenu(false);
                 } else if (state == DrawerLayout.STATE_IDLE) {
                     if (!navDrawer.isDrawerOpen(mapListView))
@@ -317,6 +316,14 @@ private class InitialLoad implements Runnable {
     private void hideResults() {
         showingResults = false;
         resultListView.setVisibility(View.GONE);
+    }
+
+    private void hideSearch() {
+        searchView.setQuery("",false); // clear first
+        searchView.setIconified(true); // close it, WTF ANDROID API???
+        // I had to read the android support library source at 3:00am to figure that one out!
+        // Aperently setIconified clears instead of iconify if not clear.
+        // https://github.com/android/platform_frameworks_support/blob/master/v7/appcompat/src/android/support/v7/widget/SearchView.java
     }
 
     private void highlightRoom(Room room) {
