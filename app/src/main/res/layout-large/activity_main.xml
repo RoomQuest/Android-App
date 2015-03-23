@@ -1,0 +1,44 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer">
+    <!-- content -->
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <edu.csusb.cse.roomquest.ui.MapView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/map"
+            android:layout_toLeftOf="@+id/result_list"
+            android:layout_toStartOf="@+id/result_list" />
+
+        <edu.csusb.cse.roomquest.ui.FloorSelectorView
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/floor_view"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@id/map"/>
+
+        <ListView
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            android:id="@+id/result_list"
+            android:visibility="visible"
+            android:background="?android:windowBackground"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/map_list"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/csusb_blue" />
+</android.support.v4.widget.DrawerLayout>

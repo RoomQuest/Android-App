@@ -9,7 +9,7 @@
             <!--<item name="android:actionBarStyle">@style/CSUSB_ActionBar</item>-->
             <item name="android:windowBackground">@android:color/black</item>
             <item name="colorPrimary">@color/csusb_blue</item>
-            <item name="colorPrimaryDark">@color/csusb_blue</item>
+            <item name="colorPrimaryDark">@color/csusb_dark_blue</item>
             <!-- Support library compatibility -->
             <!--<item name="actionBarStyle">@style/CSUSB_ActionBar</item>-->
         </style>

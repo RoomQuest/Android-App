@@ -179,7 +179,10 @@ private class InitialLoad implements Runnable {
                     } catch (ClassCastException e) {
                     }
                 }
-                hideSearch();
+                if ((getResources().getConfiguration().screenLayout &
+                        Configuration.SCREENLAYOUT_SIZE_LARGE)
+                        != Configuration.SCREENLAYOUT_SIZE_LARGE)
+                    hideSearch();
             }
         });
         // set up drawer
@@ -287,7 +290,7 @@ private class InitialLoad implements Runnable {
         if (navDrawer != null && navDrawer.isDrawerOpen(mapListView))
             navDrawer.closeDrawer(mapListView);
         else if (showingResults)
-            hideResults();
+            hideSearch();
         else if (highlightingRoom)
             highlightRoom(null);
         else
