@@ -3,17 +3,17 @@
     tools:context=".MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawer" >
+    android:id="@+id/drawer">
     <!-- content -->
     <RelativeLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
+
         <edu.csusb.cse.roomquest.ui.MapView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/map"
-            android:layout_below="@+id/result_list" />
+            android:id="@+id/map" />
 
         <edu.csusb.cse.roomquest.ui.FloorSelectorView
             android:layout_width="48dp"
@@ -28,12 +28,13 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/result_list"
             android:visibility="gone"
-            style="?attr/dropDownListViewStyle" />
+            android:background="?android:windowBackground"/>
 
     </RelativeLayout>
+
     <ListView
         android:id="@+id/map_list"
         android:layout_width="240dp"
