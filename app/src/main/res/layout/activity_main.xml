@@ -12,7 +12,8 @@
         <edu.csusb.cse.roomquest.ui.MapView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/map" />
+            android:id="@+id/map"
+            android:layout_below="@+id/result_list" />
 
         <edu.csusb.cse.roomquest.ui.FloorSelectorView
             android:layout_width="48dp"
@@ -25,21 +26,18 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp" />
 
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/result_list"
+            android:visibility="gone"
+            style="?attr/dropDownListViewStyle" />
+
     </RelativeLayout>
-    <!-- Navigation drawer -->
-    <!--<edu.csusb.cse.roomquest.ui.FloorSelectorView
-        android:id="@+id/floor_selector"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:choiceMode="singleChoice"
-        android:background="#111" />-->
     <ListView
         android:id="@+id/map_list"
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:entries="@array/temp_floors"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
         android:background="@color/csusb_blue" />
 </android.support.v4.widget.DrawerLayout>

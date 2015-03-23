@@ -2,6 +2,7 @@ package edu.csusb.cse.roomquest.test;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -27,8 +30,10 @@ import edu.csusb.cse.roomquest.mapping.Map;
 import edu.csusb.cse.roomquest.mapping.Room;
 import edu.csusb.cse.roomquest.parsing.MapMaker;
 import edu.csusb.cse.roomquest.downloader.Spot;
+import edu.csusb.cse.roomquest.search.SearchMap;
 import edu.csusb.cse.roomquest.ui.FloorSelectorView;
 import edu.csusb.cse.roomquest.ui.MapView;
+import edu.csusb.cse.roomquest.ui.ResultListAdapter;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -41,11 +46,12 @@ public class MainActivityTest extends ActionBarActivity {
     private ImageView logo;
 
     // UI elements
-    DrawerLayout navDrawer;
-    MapView mapView;
-    ListView mapListView;
+    private DrawerLayout navDrawer;
+    private MapView mapView;
+    private ListView mapListView, resultListView;
+    ResultListAdapter resultListAdapter;
     private FloorSelectorView floorsView;
-    SearchView searchView;
+    private SearchView searchView;
 
     // Data
     Map[] maps;
@@ -55,6 +61,7 @@ public class MainActivityTest extends ActionBarActivity {
     // State info
     private boolean showMenu = false;
     private boolean showingResults = false;
+    private boolean highlightingRoom = false;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP) // relax Android studio, I check its lolipop before I use a lolipop api
     @Override
@@ -136,6 +143,12 @@ private class InitialLoad implements Runnable {
         if (maps == null || maps.length == 0) {
             // ITS A TRAP!
             setContentView(R.layout.unable_to_load);
+            findViewById(R.id.content).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadMaps();
+                }
+            });
             return;
         }
         setContentView(R.layout.activity_main);
@@ -146,18 +159,38 @@ private class InitialLoad implements Runnable {
         mapListView = (ListView) findViewById(R.id.map_list);
         mapView = (MapView) findViewById(R.id.map);
         floorsView = (FloorSelectorView) findViewById(R.id.floor_view);
+        resultListView = (ListView) findViewById(R.id.result_list);
         // set up the ListView in the NavigationDrawer
-        mapListView.setAdapter(new ArrayAdapter<Map>(getSupportActionBar().getThemedContext(),android.R.layout.simple_list_item_1,maps));
+        mapListView.setAdapter(new ArrayAdapter<>(getSupportActionBar().getThemedContext(),android.R.layout.simple_list_item_1,maps));
         mapListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 displayMap((Map) parent.getItemAtPosition(position));
+                highlightRoom(null);
                 navDrawer.closeDrawer(mapListView);
             }
         });
         mapListView.addHeaderView(getLayoutInflater().inflate(R.layout.map_list_header,mapListView,false),null,false);
-
+        // set up resultListView
+        resultListAdapter = new ResultListAdapter(this);
+        resultListView.setAdapter(resultListAdapter);
+        resultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG,"result clicked");
+                try {
+                    SearchMap.Result r = (SearchMap.Result) parent.getItemAtPosition(position);
+                    highlightRoom(r.getRoom());
+                } catch (ClassCastException e) {
+                }
+                searchView.setIconified(true); // clear it
+                searchView.setIconified(true); // close it, WTF ANDROID API???
+                // I had to read the android suppor library source at 3:00am to figure that one out!
+                // https://github.com/android/platform_frameworks_support/blob/master/v7/appcompat/src/android/support/v7/widget/SearchView.java
+            }
+        });
         // set up drawer
+        navDrawer.requestFocus();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, R.string.app_name, R.string.hello_world) {
@@ -209,15 +242,7 @@ private class InitialLoad implements Runnable {
             floorsView.setFloors(null);
         else
             floorsView.setFloors(map.floors,0);
-    }
-
-    private void displayMap(Map map, Floor floor) {
-        this.map = map;
-        mapView.loadMap(map,floor);
-        if (map.floors.length <= 1)
-            floorsView.setFloors(null);
-        else
-            floorsView.setFloors(map.floors,floor);
+        searchView.setIconified(true);
     }
 
     private void displayFloor(Floor floor) {
@@ -229,34 +254,79 @@ private class InitialLoad implements Runnable {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main,menu);
+        // setup search view
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                highlightRoom(null);
+                hideResults();
                 return false;
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return false;
+                resultListView.performItemClick(resultListView,0,0);
+                return true;
             }
-
             @Override
             public boolean onQueryTextChange(String s) {
-                Log.d("RoomQuestSearch",s == null ? null : s.isEmpty() ? "empty" : s);
-                //search(s);
-                return false;
+                if (!s.equals("") || s != null)
+                search(s);
+                return true;
+            }
+        });
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    search(String.valueOf(searchView.getQuery()));
+                    showResults();
+                }
             }
         });
         return showMenu;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (navDrawer != null && navDrawer.isDrawerOpen(mapListView))
+            navDrawer.closeDrawer(mapListView);
+        else if (showingResults)
+            hideResults();
+        else if (highlightingRoom)
+            highlightRoom(null);
+        else
+            super.onBackPressed();
+    }
+
+    private void search(String query) {
+        if (map == null)
+            return;
+        else {
+            SearchMap.Result[] results = SearchMap.search(map, query);
+            resultListAdapter.setResults(results);
+        }
+    }
+
+    private void showResults() {
+        showingResults = true;
+        resultListView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideResults() {
+        showingResults = false;
+        resultListView.setVisibility(View.GONE);
+    }
+
     private void highlightRoom(Room room) {
         mapView.highlightRoom(room);
-        mapView.loadFloor(room.getFloor());
+        if (room != null) {
+            displayFloor(room.getFloor());
+            highlightingRoom = true;
+        } else {
+            highlightingRoom = false;
+        }
     }
 
     private void showMenu(boolean show) {

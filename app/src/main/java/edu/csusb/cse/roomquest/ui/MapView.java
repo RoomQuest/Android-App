@@ -165,9 +165,9 @@ public class MapView extends View {
         float x = point[0], y = point[1];
         canvas.drawCircle(x, y, circleSize, circlePaint);
         canvas.drawCircle(x, y, circleSize, whiteOutline);
-        switch (room.getType()) {
-            default :
+        switch (room.getType().toLowerCase()) {
             case "bathroom" :
+            case "restroom" :
                 toilet.setBounds(
                         (int)(x - circleSize / 2),
                         (int)(y - circleSize / 2),
@@ -176,6 +176,7 @@ public class MapView extends View {
                 );
                 toilet.draw(canvas);
                 break;
+            default :
             case "classroom" :
                 canvas.drawText(room.getName(),x,y + textSize/3,textPaint);
                 break;
@@ -232,14 +233,14 @@ public class MapView extends View {
     }
 
    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        boolean ret = super.onTouchEvent(e);
+   public boolean onTouchEvent(MotionEvent e) {
+       boolean ret = super.onTouchEvent(e);
        if (mapBitmap != null) { // lol, zoom null? Not a chance.
            ret |= scaleGestureDetector.onTouchEvent(e);
            if (!scaleGestureDetector.isInProgress())
                ret |= gestureDetector.onTouchEvent(e);
        }
-        return ret;
+       return ret;
    }
 
     private void updateBaseMatrix() {

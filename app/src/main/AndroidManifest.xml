@@ -10,7 +10,8 @@
         <activity
             android:name=".test.MainActivityTest"
             android:label="Room Quest Test"
-            android:configChanges="orientation|screenSize|screenLayout|touchscreen|navigation|keyboard|keyboardHidden">
+            android:configChanges="orientation|screenSize|screenLayout|touchscreen|navigation|keyboard|keyboardHidden"
+           android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

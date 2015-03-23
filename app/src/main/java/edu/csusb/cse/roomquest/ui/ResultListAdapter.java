@@ -21,7 +21,7 @@ public class ResultListAdapter extends BaseAdapter {
     private final Context context;
     SearchMap.Result[] results = null;
 
-    ResultListAdapter(Context context) {
+    public ResultListAdapter(Context context) {
         this.context = context;
     }
 

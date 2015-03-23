@@ -89,7 +89,7 @@ public class FloorSelectorView extends View {
     }
 
     public void selectFloor(Floor floor) {
-        if (floors == null || floors.length == 0) {
+        if (floors != null && floors.length != 0) {
             for (int i = 0; i < floors.length; i++) {
                 if (floors[i] == floor) {
                     setIndex(i);
