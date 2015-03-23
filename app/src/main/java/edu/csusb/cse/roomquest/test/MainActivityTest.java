@@ -54,21 +54,23 @@ public class MainActivityTest extends ActionBarActivity {
 
     // State info
     private boolean showMenu = false;
+    private boolean showingResults = false;
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP) // relax Android studio, I check its lolipop before I use a lolipop api
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // add some fancy colors to the app switcher if its Lolipoop
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // check if lolipop
             setTaskDescription(new ActivityManager.TaskDescription(
                     "Room Quest",
                     BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),
                     getResources().getColor(R.color.csusb_blue)
             ));
         }
+        // Load those maps
         loadMaps();
-    }
+}
 
     /**
      * Show the splash screen and load the Maps from the file system.
@@ -83,11 +85,11 @@ public class MainActivityTest extends ActionBarActivity {
         new Thread(new InitialLoad()).start();
     }
 
-    /**
-     * Part of the loadMaps method.
-     */
-    private class InitialLoad implements Runnable {
-        private int i;
+/**
+ * Part of the loadMaps method.
+ */
+private class InitialLoad implements Runnable {
+    private int i;
         @Override
         public void run() {
             try {
@@ -132,6 +134,7 @@ public class MainActivityTest extends ActionBarActivity {
      */
     private void loadMapUi() {
         if (maps == null || maps.length == 0) {
+            // ITS A TRAP!
             setContentView(R.layout.unable_to_load);
             return;
         }

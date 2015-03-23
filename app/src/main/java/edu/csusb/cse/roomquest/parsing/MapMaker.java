@@ -20,6 +20,7 @@ import edu.csusb.cse.roomquest.mapping.Room;
 
 /**
  * Contains static methods to handle parsing files.
+ * @author Michael Monaghan
  */
 public class MapMaker {
     public static final String LOG_TAG = "MapMaker";
@@ -76,8 +77,8 @@ public class MapMaker {
                             elements[0], // Name
                             elements[1], // Type
                             Floor.findFloorByName(floors, elements[2]), // Floor
-                            Integer.parseInt(elements[3]), // X
-                            Integer.parseInt(elements[4]) // Y
+                            Float.parseFloat(elements[3]), // X
+                            Float.parseFloat(elements[4]) // Y
                     ));
                 } catch (Exception e) {
                     // Well, looks like someone screwed up that line in the CSV format, don't expect me to read it.

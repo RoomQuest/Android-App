@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="AHHHHH\nUnable to load maps!\ncheck your internet connection"
+        android:text="AHHHHH\nUnable to load maps!\nCheck your internet connection\nTap to retry"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

@@ -14,7 +14,7 @@ public class Room {
     private final Floor floor;
     private float x, y;
 
-    public Room(String name, String type, Floor floor, int x, int y) {
+    public Room(String name, String type, Floor floor, float x, float y) {
         this.name = name;
         this.type = type;
         this.floor = floor;
