@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="csusb_blue">#FF0072C6</color>
-    <color name="csusb_dark_blue">#FF003864</color>
+    <color name="csusb_dark_blue">#FF00589A</color>
     <color name="csusb_grey">#FF999999</color>
     <color name="csusb_dark_grey">#FF555555</color>
 </resources>
