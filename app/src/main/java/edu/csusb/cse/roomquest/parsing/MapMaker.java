@@ -6,17 +6,20 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.csusb.cse.roomquest.downloader.Spot;
 import edu.csusb.cse.roomquest.mapping.Floor;
 import edu.csusb.cse.roomquest.mapping.Map;
 import edu.csusb.cse.roomquest.mapping.Room;
+import edu.csusb.cse.roomquest.mapping.RoomAliases;
 
 /**
  * Contains static methods to handle parsing files.
@@ -100,13 +103,66 @@ public class MapMaker {
             }
         }
         // Finally, make the map and return it.
+        Room[] rooms = roomList.toArray(new Room[roomList.size()]);
         return new Map(
                 name, // name
                 fullName, // full name
-                roomList.toArray(new Room[roomList.size()]), // rooms
+                rooms, // rooms
                 floors, // floors
-                folder // folder
+                folder, // folder
+                getRoomsAliases(new File(folder,"aliases.csv"),rooms)
         );
+    }
+
+    public static RoomAliases[] getRoomsAliases(File file, Room[] rooms) {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            Log.i(LOG_TAG, "can't find optional file " + file);
+            return null;
+        }
+        List<RoomAliases> roomAliasesList = new ArrayList<>();
+        try {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                String[] elements = line.split(",");
+                if (elements.length > 1) {
+                    Room room = null;
+                    boolean foundIt = false;
+                    for (Room r : rooms) {
+                        if (r.getName().equalsIgnoreCase(elements[0])) {
+                            room = r;
+                            foundIt = true;
+                            break;
+                        }
+                    }
+                    if (foundIt) {
+                        String[] names = new String[elements.length - 1];
+                        for (int i = 0; i < names.length; i++) {
+                            names[i] = elements[i + 1];
+                        }
+                        roomAliasesList.add(new RoomAliases(
+                                room,
+                                names
+                        ));
+                        Log.d(LOG_TAG,"found " + room + " " + Arrays.toString(names));
+                    } else {
+                        Log.e(LOG_TAG,"couldnt find a room named " + elements[0]);
+                    }
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return roomAliasesList.toArray(new RoomAliases[roomAliasesList.size()]);
     }
 
     /**

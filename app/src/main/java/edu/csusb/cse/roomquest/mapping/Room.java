@@ -1,5 +1,7 @@
 package edu.csusb.cse.roomquest.mapping;
 
+import java.util.Objects;
+
 public class Room {
 
     public String getName() {
@@ -36,6 +38,20 @@ public class Room {
 
     public Floor getFloor() {
         return floor;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        try {
+            return getName().equalsIgnoreCase(((Room) other).getName());
+        } catch (ClassCastException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
 }
