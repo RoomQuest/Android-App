@@ -14,12 +14,16 @@ public class Map {
     public final RoomAliases[] roomsAliases;
 
     public Map(String name, String fullName, Room[] rooms, Floor[] floors, File folder) {
+        this(name,fullName,rooms,floors,folder,null);
+    }
+
+    public Map(String name, String fullName, Room[] rooms, Floor[] floors, File folder,RoomAliases[] aliases) {
         this.name = name;
         this.fullName = fullName;
         this.rooms = rooms;
         this.floors = floors;
         this.folder = folder;
-        this.roomsAliases = null;
+        this.roomsAliases = aliases;
     }
 
     public String toString() {

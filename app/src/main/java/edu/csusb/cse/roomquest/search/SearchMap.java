@@ -43,6 +43,17 @@ public class SearchMap {
                         0
                 ));
             }
+            if (map.roomsAliases != null) {
+                for (RoomAliases roomAliases : map.roomsAliases) {
+                    for (String alias : roomAliases.getAliases()) {
+                        results.add(new Result(
+                                roomAliases.getRoom(),
+                                alias,
+                                1
+                        ));
+                    }
+                }
+            }
         } else {
             query = query.toLowerCase();
             String[] subqueries = query.split(" ");
