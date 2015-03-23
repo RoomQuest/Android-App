@@ -264,6 +264,7 @@ public class MapView extends View {
     public void onSizeChanged(int x, int y, int oldx, int oldy) {
         super.onSizeChanged(x,y,oldx,oldy);
         updateBaseMatrix();
+        zoomMatrix.reset();
         updateConcatMatrix();
     }
 
