@@ -1,3 +1,5 @@
+package edu.csusb.cse.roomquest.parsing;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,12 +12,12 @@ import java.util.List;
 import edu.csusb.cse.roomquest.mapping.Hotspot;
 
 public class WifiParsing {
-    public static Wifi parseWifiFile(InputStream input) {
+    public static Hotspot parseWifiFile(InputStream input) {
         BufferedReader br = null;
         String line = "";
         String splitBy = ",";
 
-        Wifi wifi = new Wifi();
+        Hotspot wifi = new Hotspot();
         List<Hotspot> hotspotList = new ArrayList<Hotspot>();
 
         try {
@@ -50,7 +52,7 @@ public class WifiParsing {
         return wifi;
     }
 
-    public Wifi parseWifiFile(String file) {
+    public Hotspot parseWifiFile(String file) {
         try {
             return parseWifiFile(new FileInputStream(file));
         } catch (FileNotFoundException e) {
@@ -58,5 +60,4 @@ public class WifiParsing {
         }
         return null;
     }
-}
 }

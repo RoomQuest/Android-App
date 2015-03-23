@@ -5,6 +5,7 @@ public class Hotspot {
     int y;
     String BSSID;
     String Power;
+    private String power;
 
     public int getXLocation() {
         return x;
@@ -36,6 +37,10 @@ public class Hotspot {
 
     public void setPower1(String Power) {
         this.Power = Power;
+    }
+
+    public void setPower(String power) {
+        this.power = power;
     }
 }
 	
