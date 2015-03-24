@@ -155,6 +155,7 @@ private class InitialLoad implements Runnable {
         floorsView = (FloorSelectorView) findViewById(R.id.floor_view);
         resultListView = (ListView) findViewById(R.id.result_list);
         // set up the ListView in the NavigationDrawer
+        mapListView.addHeaderView(getLayoutInflater().inflate(R.layout.map_list_header,mapListView,false),null,false);
         mapListView.setAdapter(new ArrayAdapter<>(getSupportActionBar().getThemedContext(),android.R.layout.simple_list_item_1,maps));
         mapListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -165,7 +166,6 @@ private class InitialLoad implements Runnable {
                 navDrawer.closeDrawer(mapListView);
             }
         });
-        mapListView.addHeaderView(getLayoutInflater().inflate(R.layout.map_list_header,mapListView,false),null,false);
         // set up resultListView
         resultListAdapter = new ResultListAdapter(this);
         resultListView.setAdapter(resultListAdapter);
@@ -176,7 +176,7 @@ private class InitialLoad implements Runnable {
                     try {
                         SearchMap.Result r = (SearchMap.Result) parent.getItemAtPosition(position);
                         highlightRoom(r.getRoom());
-                    } catch (ClassCastException e) {
+                    } catch (Exception e) {
                     }
                 }
                 if ((getResources().getConfiguration().screenLayout &
@@ -189,7 +189,7 @@ private class InitialLoad implements Runnable {
         navDrawer.requestFocus();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, R.string.app_name, R.string.hello_world) {
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, R.string.app_name, R.string.app_name) {
             @Override
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);

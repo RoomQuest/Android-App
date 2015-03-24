@@ -74,18 +74,21 @@ public class MapMaker {
                 // Split it up into elements
                 String[] elements = line.split(",");
                 // Make sure each element doesn't throw an exception
-                try {
-                    // Create and add a new Room.
-                    roomList.add(new Room(
-                            elements[0], // Name
-                            elements[1], // Type
-                            Floor.findFloorByName(floors, elements[2]), // Floor
-                            Float.parseFloat(elements[3]), // X
-                            Float.parseFloat(elements[4]) // Y
-                    ));
-                } catch (Exception e) {
-                    // Well, looks like someone screwed up that line in the CSV format, don't expect me to read it.
-                    Log.e(LOG_TAG,"Unable to parse line in rooms.csv");
+                Floor floor = Floor.findFloorByName(floors,elements[2]);
+                if (floor != null) {
+                    try {
+                        // Create and add a new Room.
+                        roomList.add(new Room(
+                                elements[0], // Name
+                                elements[1], // Type
+                                floor, // Floor
+                                Float.parseFloat(elements[3]), // X
+                                Float.parseFloat(elements[4]) // Y
+                        ));
+                    } catch (Exception e) {
+                        // Well, looks like someone screwed up that line in the CSV format, don't expect me to read it.
+                        Log.e(LOG_TAG, "Unable to parse line in rooms.csv");
+                    }
                 }
             }
         // More irritating exception crap

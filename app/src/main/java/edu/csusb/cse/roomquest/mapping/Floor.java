@@ -40,4 +40,8 @@ public class Floor {
         return null;
     }
 
+    public String toString() {
+        return getName();
+    }
+
 }

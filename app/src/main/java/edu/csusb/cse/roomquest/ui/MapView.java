@@ -119,6 +119,7 @@ public class MapView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        // Draw floor image
         if (mapBitmap == null) {
             String message;
             if (map == null)
@@ -129,15 +130,15 @@ public class MapView extends View {
             return;
         }
         canvas.drawBitmap(mapBitmap, concatMatrix, circlePaint);
-
+        // Draw floors
         if (highlightedRoom == null) {
             for (Room room : map.rooms) {// Draw normally
-                if (room.getFloor() == floor);
+                if (room.getFloor() == floor)
                     drawRoomLabel(canvas, room);
             }
         } else {
             for (Room room : map.rooms) { // Hide others
-                if (room.getFloor() == floor);
+                if (room.getFloor() == floor)
                     if (room != highlightedRoom)
                         drawRoomDot(canvas,room);
             }
