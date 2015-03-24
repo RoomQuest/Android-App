@@ -203,7 +203,7 @@ public class MapView extends View {
             mapBitmap.recycle();
             mapBitmap = null;
         }
-        if (map != null && floor != null) {
+        if (floor != null) {
             if (floor.getImageFile().exists())
                 mapBitmap = BitmapFactory.decodeFile(floor.getImageFile().getPath());
             updateBaseMatrix();
@@ -212,6 +212,7 @@ public class MapView extends View {
         else
             mapBitmap = null;
         Log.d(TAG, "decode " + floor + " " + (mapBitmap == null ? "failure" : "success"));
+        resetView();
         invalidate();
     }
     /**
@@ -230,7 +231,17 @@ public class MapView extends View {
      */
     public void highlightRoom(Room room) {
         highlightedRoom = room;
+        focusRoom(room);
         invalidate();
+    }
+
+    public void focusRoom(Room room) {
+        if(room != null && highlightedRoom.getFloor() == floor) {
+            float[] point = {room.getXCoord(), room.getYCoord()};
+            viewMatrix.mapPoints(point);
+            zoomMatrix.setTranslate(getWidth()/2-point[0],getHeight()/2-point[1]);
+            updateConcatMatrix();
+        }
     }
 
    @Override
@@ -252,6 +263,7 @@ public class MapView extends View {
                     new RectF(0, 0, getWidth(), getHeight()),
                     Matrix.ScaleToFit.END
             );*/
+            // new code zooms to center.
             viewMatrix.setTranslate(
                     getWidth()/2 - bitmapRect.width()/2,
                     getHeight()/2 - bitmapRect.height()/2
@@ -276,8 +288,13 @@ public class MapView extends View {
     @Override
     public void onSizeChanged(int x, int y, int oldx, int oldy) {
         super.onSizeChanged(x,y,oldx,oldy);
+        resetView();
+    }
+
+    public void resetView() {
         updateBaseMatrix();
         zoomMatrix.reset();
+        focusRoom(highlightedRoom);
         updateConcatMatrix();
     }
 

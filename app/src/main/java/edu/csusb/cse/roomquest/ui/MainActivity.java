@@ -37,7 +37,6 @@ public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.toString();
     // splash UI elements
     private ProgressBar progress;
-    private ImageView logo;
 
     // UI elements
     private DrawerLayout navDrawer;
@@ -82,7 +81,6 @@ public class MainActivity extends ActionBarActivity {
 
         // Find UI
         progress = (ProgressBar) findViewById(R.id.progress);
-        logo = (ImageView) findViewById(R.id.logo);
         new Thread(new InitialLoad()).start();
     }
 
