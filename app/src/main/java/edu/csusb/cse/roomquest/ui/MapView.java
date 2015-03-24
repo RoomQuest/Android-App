@@ -52,7 +52,7 @@ public class MapView extends View {
     private PointF location;
 
     // Zooming stuff
-    float maxScale = 4;
+    float maxScale = 6;
     ScaleGestureDetector scaleGestureDetector;
     GestureDetector gestureDetector;
     RectF bitmapRect, viewRect;
@@ -246,11 +246,23 @@ public class MapView extends View {
 
     private void updateBaseMatrix() {
         if (mapBitmap != null) {
-            viewMatrix.setRectToRect(
+            bitmapRect = new RectF(0, 0, mapBitmap.getWidth(), mapBitmap.getHeight());
+            /*viewMatrix.setRectToRect(
                     new RectF(0, 0, mapBitmap.getWidth(), mapBitmap.getHeight()),
                     new RectF(0, 0, getWidth(), getHeight()),
-                    Matrix.ScaleToFit.CENTER
+                    Matrix.ScaleToFit.END
+            );*/
+            viewMatrix.setTranslate(
+                    getWidth()/2 - bitmapRect.width()/2,
+                    getHeight()/2 - bitmapRect.height()/2
             );
+            float scale = 1;
+            if(bitmapRect.width() > bitmapRect.height()) {
+                scale = getHeight()/bitmapRect.height();
+            } else {
+                scale = getWidth()/bitmapRect.width();
+            }
+            viewMatrix.postScale(scale,scale,getWidth()/2,getHeight()/2);
         } else {
             viewMatrix.reset();
         }
