@@ -1,16 +1,13 @@
 package edu.csusb.cse.roomquest.parsing;
 
 
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,13 +17,14 @@ import edu.csusb.cse.roomquest.mapping.Floor;
 import edu.csusb.cse.roomquest.mapping.Map;
 import edu.csusb.cse.roomquest.mapping.Room;
 import edu.csusb.cse.roomquest.mapping.RoomAliases;
+import edu.csusb.cse.roomquest.wifi_nav.LocationSample;
 
 /**
  * Contains static methods to handle parsing files.
  * @author Michael Monaghan
  */
 public class MapMaker {
-    public static final String LOG_TAG = "MapMaker";
+    public static final String TAG = "MapMaker";
 
     /**
      *
@@ -50,7 +48,7 @@ public class MapMaker {
             ));
         } catch (FileNotFoundException e) {
             // Where's the file?
-            Log.e(LOG_TAG, "Can't find rooms.csv");
+            Log.e(TAG, "Can't find rooms.csv");
             return null;
         }
         // Read the floors
@@ -87,7 +85,7 @@ public class MapMaker {
                         ));
                     } catch (Exception e) {
                         // Well, looks like someone screwed up that line in the CSV format, don't expect me to read it.
-                        Log.e(LOG_TAG, "Unable to parse line in rooms.csv");
+                        Log.e(TAG, "Unable to parse line in rooms.csv");
                     }
                 }
             }
@@ -113,7 +111,8 @@ public class MapMaker {
                 rooms, // rooms
                 floors, // floors
                 folder, // folder
-                getRoomsAliases(new File(folder,"aliases.csv"),rooms)
+                getRoomsAliases(new File(folder,"aliases.csv"),rooms),
+                getLocationSamples(new File(folder,"wifi.csv"))
         );
     }
 
@@ -122,7 +121,7 @@ public class MapMaker {
         try {
             br = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException e) {
-            Log.i(LOG_TAG, "can't find optional file " + file);
+            Log.i(TAG, "can't find optional file " + file);
             return null;
         }
         List<RoomAliases> roomAliasesList = new ArrayList<>();
@@ -149,9 +148,9 @@ public class MapMaker {
                                 room,
                                 names
                         ));
-                        Log.d(LOG_TAG,"found " + room + " " + Arrays.toString(names));
+                        Log.d(TAG,"found " + room + " " + Arrays.toString(names));
                     } else {
-                        Log.e(LOG_TAG,"couldnt find a room named " + elements[0]);
+                        Log.e(TAG,"couldnt find a room named " + elements[0]);
                     }
 
                 }
@@ -166,6 +165,33 @@ public class MapMaker {
             }
         }
         return roomAliasesList.toArray(new RoomAliases[roomAliasesList.size()]);
+    }
+
+    public static LocationSample[] getLocationSamples(File file) {
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            Log.i(TAG,"wifi.csv not found");
+            return null;
+        }
+        List<LocationSample> LocationSamplesList = new ArrayList<LocationSample>();
+        try {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                String[] elements = line.split(",");
+
+            }
+        } catch (IOException e) {
+            return null;
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**

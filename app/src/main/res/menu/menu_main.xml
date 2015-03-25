@@ -5,5 +5,9 @@
          android:title="Search Map"
          app:showAsAction="always"
          app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item android:id="@+id/download"
+        android:title="Download Maps"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_download"/>
 
 </menu>

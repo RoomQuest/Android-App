@@ -52,7 +52,7 @@ public class MapView extends View {
     private PointF location;
 
     // Zooming stuff
-    float maxScale = 6;
+    float maxScale = 6f, minScale = 0.5f;
     ScaleGestureDetector scaleGestureDetector;
     GestureDetector gestureDetector;
     RectF bitmapRect, viewRect;
@@ -71,6 +71,9 @@ public class MapView extends View {
     // icons
     Drawable toilet = null;
 
+    // Listeners
+    MapTouchListener mapTouchListener = null;
+
     public MapView(Context context, AttributeSet attrs) {
         super(context,attrs);
         init();
@@ -81,6 +84,7 @@ public class MapView extends View {
         init();
     }
 
+    // Called by all the contructors
     private void init() {
         // Set up sizes
         float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
@@ -235,15 +239,26 @@ public class MapView extends View {
         invalidate();
     }
 
+    /**
+     * Centers room in the middle of the screen
+     * @param room
+     */
     public void focusRoom(Room room) {
         if(room != null && highlightedRoom.getFloor() == floor) {
             float[] point = {room.getXCoord(), room.getYCoord()};
             viewMatrix.mapPoints(point);
             zoomMatrix.setTranslate(getWidth()/2-point[0],getHeight()/2-point[1]);
             updateConcatMatrix();
+        } else {
+            zoomMatrix.reset();
         }
     }
 
+    /**
+     * Detects touches
+     * @param e More information on the touch.
+     * @return If it should keep paying attention to future movements of that touch.
+     */
    @Override
    public boolean onTouchEvent(MotionEvent e) {
        boolean ret = super.onTouchEvent(e);
@@ -255,6 +270,10 @@ public class MapView extends View {
        return ret;
    }
 
+    /**
+     * Updates the base zoom of the view.
+     * This will update the baseMatrix to zoom the image to fit correctly on the screen in the view.
+     */
     private void updateBaseMatrix() {
         if (mapBitmap != null) {
             bitmapRect = new RectF(0, 0, mapBitmap.getWidth(), mapBitmap.getHeight());
@@ -280,6 +299,9 @@ public class MapView extends View {
         }
     }
 
+    /**
+     * Concatenates the base zoom and zoom matrices together.
+     */
     private void updateConcatMatrix() {
         concatMatrix.set(viewMatrix);
         concatMatrix.postConcat(zoomMatrix);
@@ -291,13 +313,21 @@ public class MapView extends View {
         resetView();
     }
 
+    /**
+     * Resets the base zoom of the view and focuses on the highlighted room if there is one.
+     */
     public void resetView() {
         updateBaseMatrix();
-        zoomMatrix.reset();
         focusRoom(highlightedRoom);
         updateConcatMatrix();
     }
 
+    /**
+     * Translates the final zoomMatrix as much as allowed.
+     * The edges of the bitmap will not go past the center of the screen.
+     * @param dx How much to try to translate in the X dimension.
+     * @param dy How much to try to translate in the Y dimension.
+     */
     private void translateBy(float dx,float dy) {
         RectF map = new RectF(
                 0,
@@ -320,27 +350,35 @@ public class MapView extends View {
         updateConcatMatrix();
     }
 
+    /**
+     * Scales the final zoomMatrix as much as allowed
+     * The edges of the bitmap will not go past the center of the screen.
+     * @param s How much to try to scale by.
+     * @param x X coord to zoom in on.
+     * @param y y coord to zoom in on.
+     */
     private void scaleBy(float s, float x, float y) {
         float currentScale = zoomMatrix.mapRadius(1);
         if (currentScale * s > maxScale)
             s = maxScale / currentScale;
-        else if (currentScale * s < 1)
-            s = 1 / currentScale;
+        else if (currentScale * s < minScale)
+            s = minScale / currentScale;
         zoomMatrix.postScale(s, s, x, y);
     }
 
+    /**
+     * Instantiated to listen to scaling events.
+     */
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         float lastX, lastY;
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
-            //Log.d(TAG,"Scale Begin");
             lastX = detector.getFocusX();
             lastY = detector.getFocusY();
             return true;
         }
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            //Log.d(TAG, "Scale: " + detector.getScaleFactor());
             float x = detector.getFocusX(), y = detector.getFocusY();
             translateBy(x - lastX, y - lastY);
             scaleBy(detector.getScaleFactor(),x,y);
@@ -352,11 +390,13 @@ public class MapView extends View {
         }
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
-            //Log.d(TAG, "Scale ended");
         }
 
     }
 
+    /**
+     * Instantiated to listen to gesture events.
+     */
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float x, float y) {
@@ -373,5 +413,19 @@ public class MapView extends View {
             invalidate();
             return true;
         }
+        public void onLongPress(MotionEvent e) {
+            Matrix inv = new Matrix();
+            if (concatMatrix.invert(inv)) {
+                float[] point = {e.getX(),e.getY()};
+                inv.mapPoints(point);
+                if(mapTouchListener != null) {
+                    mapTouchListener.onTouch(e.getX(),e.getY());
+                }
+            }
+        }
+    }
+
+    public interface MapTouchListener {
+        public void onTouch(float x, float y);
     }
 }
