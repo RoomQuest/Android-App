@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -55,6 +54,10 @@ public class MainActivity extends ActionBarActivity {
     private boolean showMenu = false;
     private boolean showingResults = false;
     private boolean highlightingRoom = false;
+    private boolean forceDownload = false;
+
+    // MenuItems
+    MenuItem searchMenuItem, downloadMenuItem;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP) // relax Android studio, I check its lolipop before I use a lolipop api
     @Override
@@ -106,12 +109,25 @@ private class InitialLoad implements Runnable {
                     Thread.sleep(50);
                 }*/
                 // Load maps
-                Log.d(TAG,"downloading maps");
-                Spot.loadCert(getResources().openRawResource(R.raw.csusb));
-                Spot.fetch();
-                Log.d(TAG,"loading maps");
-                maps = MapMaker.getMaps();
-                Log.d(TAG,"Complete, " + ((maps == null) ? "null" : "not null"));
+                if (forceDownload) {
+                    Log.d(TAG, "downloading maps");
+                    Spot.loadCert(getResources().openRawResource(R.raw.csusb));
+                    Spot.fetch();
+                    Log.d(TAG, "loading maps");
+                    maps = MapMaker.getMaps();
+                    forceDownload = false;
+                } else {
+                    maps = MapMaker.getMaps();
+                    Log.d(TAG, "loading maps");
+                    if (maps == null) {
+                        Log.d(TAG, "downloading maps");
+                        Spot.loadCert(getResources().openRawResource(R.raw.csusb));
+                        Spot.fetch();
+                        Log.d(TAG, "loading maps");
+                        maps = MapMaker.getMaps();
+                    }
+                    Log.d(TAG, "Complete, " + ((maps == null) ? "null" : "not null"));
+                }
                 runOnUiThread(new Runnable() {
                     public void run() {
                         progress.setVisibility(View.GONE);
@@ -201,15 +217,16 @@ private class InitialLoad implements Runnable {
             public void onDrawerOpened(View view) {
                 super.onDrawerClosed(view);
                 getSupportActionBar().setTitle(getTitle());
-                hideResults();
+                hideSearch();
                 showMenu(false);
                 syncState();
             }
             @Override
             public void onDrawerStateChanged(int state) {
                 super.onDrawerStateChanged(state);
+                // OnSlide
                 if (state == DrawerLayout.STATE_DRAGGING) {
-                    hideResults();
+                    hideSearch();
                     showMenu(false);
                 } else if (state == DrawerLayout.STATE_IDLE) {
                     if (!navDrawer.isDrawerOpen(mapListView))
@@ -251,6 +268,9 @@ private class InitialLoad implements Runnable {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main,menu);
+        // find menus
+        searchMenuItem = menu.findItem(R.id.search);
+        downloadMenuItem = menu.findItem(R.id.download);
         // setup search view
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -282,7 +302,7 @@ private class InitialLoad implements Runnable {
                 }
             }
         });
-        return showMenu;
+        return true;
     }
 
     @Override
@@ -341,15 +361,22 @@ private class InitialLoad implements Runnable {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        return showMenu;
+        searchMenuItem.setVisible(showMenu);
+        downloadMenuItem.setVisible(!showMenu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (actionBarDrawerToggle.onOptionsItemSelected(item))
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
             return true;
-        else
+        } else if (item == downloadMenuItem) {
+            forceDownload = true;
+            loadMaps();
+            return true;
+        } else {
             return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

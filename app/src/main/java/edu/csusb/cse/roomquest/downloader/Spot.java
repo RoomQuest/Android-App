@@ -35,7 +35,7 @@ public class Spot {
     public static final File MAP_FOLDER = new File(Environment.getExternalStorageDirectory(), "RoomQuest");
     private static boolean trustingEveryone = false;
 
-    // Since we're too poor to acquire an official certificate...
+    // Since we're too poor to acquire an official certificate authority...
     public static void trustEveryone() {
         if (trustingEveryone)
             return;
@@ -69,7 +69,7 @@ public class Spot {
         });
         trustingEveryone = true;
     }
-    // Since we're too poor to acquire an official certificate...
+    // Since we're too poor to acquire an official certificate authority...
     public static void loadCert(InputStream certInput) {
         // make a certificate
         try {
@@ -173,13 +173,18 @@ public class Spot {
         }
     }
 
+    /**
+     * Deletes folder contents. Keeps folder structure.
+     * @param folder the folder to delete contents of.
+     */
     private static void eraseFolderContents(File folder) {
         String[] files = folder.list();
         if (files != null)
             for (String name : files) {
                 File file = new File(folder,name);
-                if (file.isDirectory());
+                if (file.isDirectory()) {
                     eraseFolderContents(file);
+                }
                 Log.i("Spot", "Deleting " + file);
                 file.delete();
         }
