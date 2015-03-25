@@ -16,10 +16,14 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.csusb.cse.roomquest.R;
 import edu.csusb.cse.roomquest.mapping.Floor;
 import edu.csusb.cse.roomquest.mapping.Room;
 import edu.csusb.cse.roomquest.mapping.Map;
+import edu.csusb.cse.roomquest.wifi_nav.LocationSample;
 
 /**
  * Created by Michael on 2/13/2015.
@@ -67,12 +71,17 @@ public class MapView extends View {
     Paint textPaint = new Paint();
     Paint whiteOutline = new Paint();
     Paint locationPaint = new Paint();
+    Paint locationSamplePaint = new Paint();
 
     // icons
     Drawable toilet = null;
 
     // Listeners
     MapTouchListener mapTouchListener = null;
+
+    // wifi access point list
+    public List<LocationSample> locationSamples = new ArrayList<>();
+    boolean showLocationSamples = false;
 
     public MapView(Context context, AttributeSet attrs) {
         super(context,attrs);
@@ -102,6 +111,8 @@ public class MapView extends View {
         whiteOutline.setStrokeWidth(strokeOutlineSize);
         locationPaint.setColor(0xFFFF0000);
         locationPaint.setAntiAlias(true);
+        locationSamplePaint.setColor(0xFF00FF00);
+        locationSamplePaint.setAntiAlias(true);
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(textSize);
@@ -149,17 +160,30 @@ public class MapView extends View {
             if (highlightedRoom.getFloor() == floor) // Draw highlighted room normally.
                 drawRoomLabel(canvas, highlightedRoom);
         }
+        // draw location samples if specified
+        if (showLocationSamples) {
+            for (LocationSample locationSample : locationSamples) {
+                drawLocationSample(canvas,locationSample);
+            }
+        }
+        // draw location dot
         if (location != null)
             drawLocation(canvas);
     }
 
     private void drawLocation(Canvas canvas) {
-        float[] point = new float[2];
-        point[0]=location.x;
-        point[1]=location.y;
+        float[] point = {location.x,location.y};
         concatMatrix.mapPoints(point);
         float x = point[0], y = point[1];
         canvas.drawCircle(x, y, dotSize,locationPaint);
+    }
+
+    private void drawLocationSample(Canvas canvas, LocationSample locationSample) {
+        float[] point = new float[2];
+        point[0]=locationSample.x;
+        point[1]=locationSample.y;
+        concatMatrix.mapPoints(point);
+        canvas.drawCircle(point[0],point[1],dotSize,locationSamplePaint);
     }
 
     private void drawRoomLabel(Canvas canvas, Room room) {
@@ -309,7 +333,7 @@ public class MapView extends View {
 
     @Override
     public void onSizeChanged(int x, int y, int oldx, int oldy) {
-        super.onSizeChanged(x,y,oldx,oldy);
+        super.onSizeChanged(x, y, oldx, oldy);
         resetView();
     }
 
