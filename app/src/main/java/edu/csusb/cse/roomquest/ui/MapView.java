@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -53,7 +54,11 @@ public class MapView extends View {
     Bitmap mapBitmap = null;
 
     // Location
-    private PointF location;
+    private PointF location = new PointF();
+    private Floor locationFloor;
+    private boolean showLocation = false;
+    private PointF locationCursor = new PointF();
+    private boolean showLocationCursor = false;
 
     // Zooming stuff
     float maxScale = 6f, minScale = 0.5f;
@@ -72,6 +77,7 @@ public class MapView extends View {
     Paint whiteOutline = new Paint();
     Paint locationPaint = new Paint();
     Paint locationSamplePaint = new Paint();
+    Paint locationCursorPaint = new Paint();
 
     // icons
     Drawable toilet = null;
@@ -113,6 +119,8 @@ public class MapView extends View {
         locationPaint.setAntiAlias(true);
         locationSamplePaint.setColor(0xFF00FF00);
         locationSamplePaint.setAntiAlias(true);
+        locationCursorPaint.setColor(0xFFFF00FF);
+        locationCursorPaint.setAntiAlias(true);
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(textSize);
@@ -160,15 +168,19 @@ public class MapView extends View {
             if (highlightedRoom.getFloor() == floor) // Draw highlighted room normally.
                 drawRoomLabel(canvas, highlightedRoom);
         }
-        // draw location samples if specified
-        if (showLocationSamples) {
-            for (LocationSample locationSample : locationSamples) {
-                drawLocationSample(canvas,locationSample);
-            }
-        }
         // draw location dot
-        if (location != null)
-            drawLocation(canvas);
+        if (showLocation)
+            if (locationFloor == floor)
+                drawLocation(canvas);
+        // draw location samples if specified
+        if (showLocationSamples)
+            for (LocationSample locationSample : locationSamples) {
+                if (locationSample.floor == floor)
+                    drawLocationSample(canvas,locationSample);
+            }
+        // draw location cursor
+        if (showLocationCursor)
+            drawLocationCursor(canvas);
     }
 
     private void drawLocation(Canvas canvas) {
@@ -176,6 +188,13 @@ public class MapView extends View {
         concatMatrix.mapPoints(point);
         float x = point[0], y = point[1];
         canvas.drawCircle(x, y, dotSize,locationPaint);
+    }
+
+    private void drawLocationCursor(Canvas canvas) {
+        float[] point = {locationCursor.x,locationCursor.y};
+        concatMatrix.mapPoints(point);
+        float x = point[0], y = point[1];
+        canvas.drawCircle(x, y, dotSize,locationCursorPaint);
     }
 
     private void drawLocationSample(Canvas canvas, LocationSample locationSample) {
@@ -221,9 +240,23 @@ public class MapView extends View {
         canvas.drawCircle(x, y, dotSize, circlePaint);
     }
 
-    public void setLocation(float x, float y) {
-        location = new PointF(x,y);
+    public void setLocation(float x, float y, Floor floor) {
+        locationFloor = floor;
+        location.set(x,y);
     }
+
+    public void showLocation(boolean show) {
+        showLocation = show;
+    }
+
+    public void setLocationCursor(float x, float y) {
+        locationCursor.set(x,y);
+    }
+
+    public void showLocationCursor(boolean show) {
+        showLocationCursor = show;
+    }
+
 
     public void loadFloor(Floor floor) {
         this.floor = floor;
