@@ -201,6 +201,8 @@ private class InitialLoad implements Runnable {
             public void onDrawerOpened(View view) {
                 super.onDrawerClosed(view);
                 getSupportActionBar().setTitle(getTitle());
+                hideResults();
+                showMenu(false);
                 syncState();
             }
             @Override
