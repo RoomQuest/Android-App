@@ -13,9 +13,9 @@ import java.util.List;
  * Created by Michael on 3/25/15.
  */
 public class Locator {
-
     private Context context;
-    WifiManager wm;
+    private WifiManager wm;
+    private Collection<LocationSample> locationSamples;
 
     public Locator(Context context) {
         this.context = context;
